@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Customer Due Management System - Pakistan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+    <!-- Header -->
+    <div class="app-header">
+        <div class="header-content">
+            <i class="fas fa-users"></i>
+            <h1>Customer Due Manager <span class="pkr-badge">PKR</span></h1>
+        </div>
+        <div class="header-buttons">
+            <button class="export-btn" id="exportBtn">
+                <i class="fas fa-file-excel"></i> Export Excel
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        
+        <!-- Customers List View -->
+        <div class="list-view" id="listView">
+            <!-- Stats Cards - PKR Format -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Customers</span>
+                        <span class="stat-value" id="totalCustomers">0</span>
+                    </div>
+                </div>
+                <div class="stat-card stat-total">
+                    <div class="stat-icon"><i class="fas fa-rupee-sign"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Amount</span>
+                        <span class="stat-value" id="totalAmount">PKR 0</span>
+                    </div>
+                </div>
+                <div class="stat-card stat-due">
+                    <div class="stat-icon"><i class="fas fa-exclamation-circle"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Due</span>
+                        <span class="stat-value" id="totalDue">PKR 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search & Filters -->
+            <div class="search-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search by ID, name, CNIC, city, address...">
+                </div>
+                <div class="filter-group">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="due">Has Due</button>
+                    <button class="filter-btn" data-filter="cleared">Cleared</button>
+                </div>
+                <button class="add-customer-btn" id="showAddBtn">
+                    <i class="fas fa-plus"></i> Add Customer
+                </button>
+            </div>
+
+            <!-- Customers Table -->
+            <div class="table-container">
+                <table class="customers-table">
+                    <thead>
+                        <tr>
+                            <th>ID #</th>
+                            <th>Name</th>
+                            <th>CNIC</th>
+                            <th>City</th>
+                            <th>Due (PKR)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customersList">
+                        <tr>
+                            <td colspan="6" class="loading-cell">
+                                <i class="fas fa-spinner fa-spin"></i> Loading customers...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Customer Form Modal (Add/Edit Screen) -->
+        <div class="modal" id="customerModal" style="display: none;">
+            <div class="modal-overlay"></div>
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2 id="modalTitle"><i class="fas fa-user-plus"></i> Add Customer</h2>
+                    <button class="modal-close" id="closeModalBtn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="customerForm">
+                        <input type="hidden" id="customerId">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-user"></i> Full Name *</label>
+                                <input type="text" id="name" required placeholder="e.g., Muhammad Ali">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-id-card"></i> CNIC *</label>
+                                <input type="text" id="cnic" placeholder="12345-1234567-1">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-phone"></i> Contact No</label>
+                                <input type="tel" id="contactNo" placeholder="0300 1234567">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-mobile-alt"></i> Cell No</label>
+                                <input type="tel" id="cellNo" placeholder="0312 3456789">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-envelope"></i> Email</label>
+                                <input type="email" id="email" placeholder="customer@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-calendar"></i> Entry Date *</label>
+                                <input type="date" id="entryDate" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-building"></i> C/O (Care Of)</label>
+                                <input type="text" id="co" placeholder="Father/Husband name">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-map-marker-alt"></i> Address *</label>
+                                <input type="text" id="address" required placeholder="Street, area">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-city"></i> Colony</label>
+                                <input type="text" id="colony" placeholder="Colony/Society">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-city"></i> City *</label>
+                                <input type="text" id="city" required placeholder="e.g., Faisalabad">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-globe"></i> Country *</label>
+                                <input type="text" id="country" required value="Pakistan">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-rupee-sign"></i> Due Amount (PKR) *</label>
+                                <input type="number" id="dueAmount" required step="100" value="0" placeholder="0">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-info-circle"></i> Reason / Notes</label>
+                            <textarea id="reason" rows="3" placeholder="Reason for due or any notes..."></textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-cancel" id="cancelFormBtn">Cancel</button>
+                            <button type="submit" class="btn-save">
+                                <i class="fas fa-save"></i> Save Customer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div class="delete-modal" id="deleteModal" style="display: none;">
+            <div class="delete-modal-content">
+                <div class="delete-icon">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+                <h3>Delete Customer?</h3>
+                <p id="deleteCustomerName"></p>
+                <p class="warning-text">This action cannot be undone!</p>
+                <div class="delete-actions">
+                    <button class="delete-cancel" id="cancelDeleteBtn">Cancel</button>
+                    <button class="delete-confirm" id="confirmDeleteBtn">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Details Modal -->
+        <div class="view-modal" id="viewModal" style="display: none;">
+            <div class="view-modal-content">
+                <button class="view-close" id="closeViewBtn">&times;</button>
+                <div class="view-header">
+                    <i class="fas fa-user-circle"></i>
+                    <h2 id="viewName"></h2>
+                    <span class="customer-id-badge" id="viewIdBadge"></span>
+                </div>
+                <div class="view-details">
+                    <div class="detail-row">
+                        <span class="detail-label"><i class="fas fa-id-card"></i> CNIC:</span>
+                        <span class="detail-value" id="viewCnic"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label"><i class="fas fa-phone"></i> Contact:</span>
+                        <span class="detail-value" id="viewContact"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label"><i class="fas fa-envelope"></i> Email:</span>
+                        <span class="detail-value" id="viewEmail"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label"><i class="fas fa-building"></i> C/O:</span>
+                        <span class="detail-value" id="viewCo"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label"><i class="fas fa-map-marker-alt"></i> Address:</span>
+                        <span class="detail-value" id="viewAddress"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label"><i class="fas fa-city"></i> Colony/City:</span>
+                        <span class="detail-value" id="viewColony"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label"><i class="fas fa-calendar"></i> Entry Date:</span>
+                        <span class="detail-value" id="viewEntryDate"></span>
+                    </div>
+                    <div class="detail-row due-row-detail">
+                        <span class="detail-label"><i class="fas fa-rupee-sign"></i> Due Amount:</span>
+                        <span class="detail-value due-amount" id="viewDue"></span>
+                    </div>
+                    <div class="detail-row" id="reasonRow" style="display: none;">
+                        <span class="detail-label"><i class="fas fa-info-circle"></i> Reason:</span>
+                        <span class="detail-value" id="viewReason"></span>
+                    </div>
+                </div>
+                <div class="view-actions">
+                    <button class="view-edit-btn" id="viewEditBtn">
+                        <i class="fas fa-edit"></i> Edit Customer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
