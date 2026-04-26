@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Login - Customer Due Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        
+        .login-header i {
+            font-size: 60px;
+            color: #1e3c72;
+            background: #e8eaf6;
+            padding: 20px;
+            border-radius: 50%;
+        }
+        
+        .login-header h1 {
+            font-size: 1.5rem;
+            color: #1a1a2e;
+            margin-top: 15px;
+        }
+        
+        .login-header p {
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 22px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .form-group label i {
+            margin-right: 8px;
+            color: #1e3c72;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 14px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 3px rgba(30,60,114,0.1);
+        }
+        
+        .password-wrapper {
+            position: relative;
+        }
+        
+        .password-wrapper input {
+            padding-right: 45px;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #999;
+            font-size: 1.1rem;
+        }
+        
+        .toggle-password:hover {
+            color: #1e3c72;
+        }
+        
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+        
+        .login-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .error-msg {
+            background: #fee;
+            color: #dc3545;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .role-selector {
+            margin-bottom: 25px;
+        }
+        
+        .role-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 12px;
+            display: block;
+        }
+        
+        .role-title i {
+            margin-right: 5px;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.6s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 25px;
+            }
+            
+            .login-header i {
+                font-size: 40px;
+                padding: 15px;
+            }
+            
+            .login-header h1 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <i class="fas fa-users"></i>
+            <h1>Customer Due Manager</h1>
+            <p>Pakistan - Payment Collection System</p>
+        </div>
+        
+        <div id="errorMsg" class="error-msg"></div>
+        
+        <div class="role-selector">
+            <span class="role-title"><i class="fas fa-user-tag"></i> Login As</span>
+            <select id="roleSelect">
+                <option value="admin">Administrator</option>
+                <option value="user">Payment Receiver</option>
+            </select>
+        </div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Username</label>
+                <input type="text" id="username" required placeholder="Enter username" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" required placeholder="Enter password">
+                    <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+                </div>
+            </div>
+            <button type="submit" class="login-btn" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+        </form>
+    </div>
+    
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+        
+        const roleSelect = document.getElementById('roleSelect');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        
+        // Toggle password visibility
+        const togglePassword = document.getElementById('togglePassword');
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+        
+        // Role selection auto-fill
+        roleSelect.addEventListener('change', () => {
+            const role = roleSelect.value;
+            if (role === 'admin') {
+                usernameInput.value = 'admin';
+                passwordInput.value = 'admin123';
+            } else if (role === 'user') {
+                usernameInput.value = 'user';
+                passwordInput.value = 'user123';
+            }
+        });
+        
+        // Auto-fill default on page load
+        usernameInput.value = 'admin';
+        passwordInput.value = 'admin123';
+        
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+            const errorMsg = document.getElementById('errorMsg');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (!username || !password) {
+                errorMsg.textContent = 'Please enter username and password';
+                errorMsg.style.display = 'block';
+                return;
+            }
+            
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<span class="loading-spinner"></span> Logging in...';
+            
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    localStorage.setItem('token', result.token);
+                    localStorage.setItem('user', JSON.stringify(result.user));
+                    window.location.href = 'index.html';
+                } else {
+                    errorMsg.textContent = result.message || 'Invalid credentials';
+                    errorMsg.style.display = 'block';
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+                }
+            } catch (error) {
+                errorMsg.textContent = 'Connection error. Make sure server is running on port 5000';
+                errorMsg.style.display = 'block';
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+            }
+        });
+        
+        // Enter key submit
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+            }
+        });
+        
+        // Clear error on input
+        usernameInput.addEventListener('input', () => {
+            document.getElementById('errorMsg').style.display = 'none';
+        });
+        passwordInput.addEventListener('input', () => {
+            document.getElementById('errorMsg').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
