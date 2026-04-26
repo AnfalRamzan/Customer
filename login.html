@@ -235,7 +235,54 @@
     </div>
     
     <script>
-        const API_URL = 'http://localhost:5000/api';
+        // Automatically find backend server
+        async function findBackendServer() {
+            const currentHost = window.location.hostname;
+            const currentPort = window.location.port;
+            
+            // Try same port first
+            if (currentPort) {
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 2000);
+                    const response = await fetch(`${window.location.protocol}//${currentHost}:${currentPort}/api/health`, {
+                        method: 'GET',
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeoutId);
+                    if (response.ok) {
+                        return `${window.location.protocol}//${currentHost}:${currentPort}/api`;
+                    }
+                } catch(e) {}
+            }
+            
+            // Try common ports
+            const portsToTry = [3000, 5000, 8080, 3001, 4000, 8000, 9000];
+            
+            for (const port of portsToTry) {
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 2000);
+                    const response = await fetch(`${window.location.protocol}//${currentHost}:${port}/api/health`, {
+                        method: 'GET',
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeoutId);
+                    if (response.ok) {
+                        return `${window.location.protocol}//${currentHost}:${port}/api`;
+                    }
+                } catch(e) {}
+            }
+            
+            // Default for localhost
+            if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
+                return 'http://localhost:3000/api';
+            }
+            
+            return `${window.location.protocol}//${currentHost}/api`;
+        }
+        
+        let API_URL = '';
         
         const roleSelect = document.getElementById('roleSelect');
         const usernameInput = document.getElementById('username');
@@ -281,9 +328,17 @@
             }
             
             loginBtn.disabled = true;
-            loginBtn.innerHTML = '<span class="loading-spinner"></span> Logging in...';
+            loginBtn.innerHTML = '<span class="loading-spinner"></span> Finding server...';
             
             try {
+                // Find backend server first
+                if (!API_URL) {
+                    API_URL = await findBackendServer();
+                    console.log('Found API at:', API_URL);
+                }
+                
+                loginBtn.innerHTML = '<span class="loading-spinner"></span> Logging in...';
+                
                 const response = await fetch(`${API_URL}/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -303,10 +358,11 @@
                     loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
                 }
             } catch (error) {
-                errorMsg.textContent = 'Connection error. Make sure server is running on port 5000';
+                errorMsg.textContent = 'Connection error. Make sure backend server is running.';
                 errorMsg.style.display = 'block';
                 loginBtn.disabled = false;
                 loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+                API_URL = ''; // Reset to try again
             }
         });
         

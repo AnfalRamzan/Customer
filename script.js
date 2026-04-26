@@ -1,8 +1,77 @@
 // ============================================
-// API CONFIGURATION
+// API CONFIGURATION - AUTO DETECT BACKEND
 // ============================================
 
-const API_URL = 'http://localhost:5000/api';
+// Automatically find backend server
+async function findBackendServer() {
+    // Get current frontend host and port
+    const currentHost = window.location.hostname;
+    const currentPort = window.location.port;
+    
+    // First, try same port as frontend (if backend served from same origin)
+    if (currentPort) {
+        try {
+            const testUrl = `${window.location.protocol}//${currentHost}:${currentPort}/api/health`;
+            console.log('Testing:', testUrl);
+            const response = await fetch(testUrl, { 
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (response.ok) {
+                console.log('✅ Backend found on port:', currentPort);
+                return `${window.location.protocol}//${currentHost}:${currentPort}/api`;
+            }
+        } catch (e) {
+            console.log('No backend on port:', currentPort);
+        }
+    }
+    
+    // Try common ports in order
+    const portsToTry = [3000, 5000, 8080, 3001, 4000, 8000, 9000];
+    
+    for (const port of portsToTry) {
+        try {
+            const testUrl = `${window.location.protocol}//${currentHost}:${port}/api/health`;
+            console.log('Testing port:', port);
+            
+            // Set timeout to avoid long waits
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 2000);
+            
+            const response = await fetch(testUrl, { 
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                signal: controller.signal
+            });
+            
+            clearTimeout(timeoutId);
+            
+            if (response.ok) {
+                console.log('✅ Backend found on port:', port);
+                return `${window.location.protocol}//${currentHost}:${port}/api`;
+            }
+        } catch (e) {
+            console.log('No backend on port:', port);
+        }
+    }
+    
+    // If on localhost and nothing found, try default
+    if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
+        return 'http://localhost:3000/api';
+    }
+    
+    // For production, use same origin
+    return `${window.location.protocol}//${currentHost}/api`;
+}
+
+let API_URL = '';
+
+// Initialize API URL
+async function initApiUrl() {
+    API_URL = await findBackendServer();
+    console.log('🎯 Using API URL:', API_URL);
+    return API_URL;
+}
 
 let currentFilter = 'all';
 let currentSearchTerm = '';
@@ -126,6 +195,10 @@ function startVoiceSearch() {
 // ============================================
 
 async function apiCall(endpoint, options = {}) {
+    if (!API_URL) {
+        await initApiUrl();
+    }
+    
     try {
         const response = await fetch(`${API_URL}${endpoint}`, {
             headers: {
@@ -427,7 +500,7 @@ async function renderCustomers() {
                         <button class="action-btn delete-action" onclick="event.stopPropagation(); confirmDeleteCustomer(${customer.id}, '${escapeHtml(customer.name)}')" title="Delete"><i class="fas fa-trash"></i></button>
                     ` : ''}
                 </td>
-             </tr>
+              </tr>
         `).join('');
         
         if (searchTerm && customers.length > 0 && customers.length !== stats.totalCustomers) {
@@ -449,7 +522,7 @@ function showLoading(show) {
 }
 
 // ============================================
-// SEARCH FUNCTION - FIXED
+// SEARCH FUNCTION
 // ============================================
 
 function handleSearch() {
@@ -993,6 +1066,9 @@ function startAutoRefresh() {
 // ============================================
 
 async function init() {
+    // First, find the backend server
+    await initApiUrl();
+    
     if (!checkAuth()) return;
     
     const userInfo = document.getElementById('userInfo');
@@ -1084,4 +1160,5 @@ window.confirmDeleteCustomer = confirmDeleteCustomer;
 window.openPaymentModal = openPaymentModal;
 window.markReminderAsSent = markReminderAsSent;
 
+// Start the app
 init();

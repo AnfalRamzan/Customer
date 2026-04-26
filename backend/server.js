@@ -2,16 +2,40 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const os = require('os');
 require('dotenv').config();
 
 const { pool, testConnection } = require('./db');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-const JWT_SECRET = process.env.JWT_SECRET || 'customer-due-secret-key-2024';
 
-app.use(cors());
+// Get local IP address function
+function getLocalIp() {
+    const interfaces = os.networkInterfaces();
+    for (const name of Object.keys(interfaces)) {
+        for (const iface of interfaces[name]) {
+            if (iface.family === 'IPv4' && !iface.internal) {
+                return iface.address;
+            }
+        }
+    }
+    return 'localhost';
+}
+
+// Dynamic CORS - Allow any origin
+app.use(cors({
+    origin: '*',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json({ limit: '50mb' }));
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+    res.json({ success: true, message: 'Server is running', timestamp: new Date().toISOString() });
+});
 
 // Auth Middleware
 const authenticateToken = (req, res, next) => {
@@ -22,7 +46,7 @@ const authenticateToken = (req, res, next) => {
         return res.status(401).json({ success: false, message: 'Access denied. Please login.' });
     }
     
-    jwt.verify(token, JWT_SECRET, (err, user) => {
+    jwt.verify(token, process.env.JWT_SECRET || 'customer-due-secret-key-2024', (err, user) => {
         if (err) {
             return res.status(403).json({ success: false, message: 'Invalid or expired token' });
         }
@@ -58,7 +82,7 @@ app.post('/api/login', async (req, res) => {
         
         const token = jwt.sign(
             { id: user.id, username: user.username, role: user.role, fullName: user.full_name },
-            JWT_SECRET,
+            process.env.JWT_SECRET || 'customer-due-secret-key-2024',
             { expiresIn: '24h' }
         );
         
@@ -282,31 +306,61 @@ app.get('/api/export', authenticateToken, async (req, res) => {
     }
 });
 
-// Health check
-app.get('/api/health', (req, res) => {
-    res.json({ success: true, message: 'Server is running' });
-});
+// Export for Vercel/Railway
+module.exports = app;
 
 // Start server
-async function start() {
-    console.log('\n========================================');
-    console.log('🚀 CUSTOMER DUE MANAGEMENT SYSTEM');
-    console.log('========================================\n');
-    
-    const connected = await testConnection();
-    
-    if (connected) {
-        app.listen(PORT, () => {
-            console.log(`✅ Server running on http://localhost:${PORT}`);
-            console.log('\n📋 Login Credentials:');
-            console.log('   👑 Admin:  admin / admin123');
-            console.log('   👤 User:   user / user123');
-            console.log('\n========================================\n');
+if (require.main === module) {
+    async function start() {
+        console.log('\n╔══════════════════════════════════════════════════════════════╗');
+        console.log('║     CUSTOMER DUE MANAGEMENT SYSTEM - BACKEND SERVER         ║');
+        console.log('╚══════════════════════════════════════════════════════════════╝\n');
+        
+        const connected = await testConnection();
+        
+        if (!connected) {
+            console.log('❌ Cannot start server. Database connection failed.');
+            console.log('\n💡 Troubleshooting:');
+            console.log('   1. Make sure MySQL is installed and running');
+            console.log('   2. Run: node setup-db.js');
+            console.log('   3. Check MySQL credentials in .env file\n');
+            process.exit(1);
+        }
+        
+        const PORT = process.env.PORT || 3000;
+        const localIp = getLocalIp();
+        
+        const server = app.listen(PORT, '0.0.0.0', () => {
+            console.log('✅ Server started successfully!\n');
+            console.log('📡 SERVER ADDRESSES:');
+            console.log(`   ▶ Local:    http://localhost:${PORT}`);
+            console.log(`   ▶ Network:  http://${localIp}:${PORT}`);
+            console.log(`   ▶ API:      http://localhost:${PORT}/api\n`);
+            
+            console.log('🔑 LOGIN CREDENTIALS:');
+            console.log('   ┌─────────────────────────────────────────────────────┐');
+            console.log('   │  👑 ADMIN ACCOUNT                                    │');
+            console.log('   │     Username: admin                                  │');
+            console.log('   │     Password: admin123                               │');
+            console.log('   ├─────────────────────────────────────────────────────┤');
+            console.log('   │  👤 USER ACCOUNT                                     │');
+            console.log('   │     Username: user                                   │');
+            console.log('   │     Password: user123                                │');
+            console.log('   └─────────────────────────────────────────────────────┘\n');
+            
+            console.log('🌐 TO ACCESS FROM OTHER DEVICES:');
+            console.log(`   Open from phone/another computer: http://${localIp}:${PORT}/api/health\n`);
+            
+            console.log('💡 Frontend Setup:');
+            console.log('   1. Open login.html in browser');
+            console.log('   2. Frontend will automatically detect this server');
+            console.log('   3. Or manually enter: http://localhost:' + PORT + '/api\n');
+            
+            console.log('╔══════════════════════════════════════════════════════════════╗');
+            console.log('║                    SERVER IS READY!                          ║');
+            console.log('╚══════════════════════════════════════════════════════════════╝\n');
         });
-    } else {
-        console.log('❌ Cannot start server. Database connection failed.');
-        process.exit(1);
     }
+    
+    start();
 }
-
-start();
