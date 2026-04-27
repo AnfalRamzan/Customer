@@ -1,27 +1,15 @@
-import { connectDB } from "./db";
+import mysql from "mysql2/promise";
 
-export default async function handler(req,res){
-
-const db = await connectDB();
-
-const {username,password} = req.body;
-
-const [rows] = await db.execute(
-"SELECT * FROM users WHERE username=? AND password=?",
-[username,password]
-);
-
-if(rows.length){
-res.json({
-success:true,
-token:"demo-token",
-user:rows[0]
-});
-}else{
-res.json({
-success:false,
-message:"Invalid login"
-});
-}
-
+export async function connectDB() {
+  try {
+    return await mysql.createConnection({
+      host: "YOUR_HOST",
+      user: "YOUR_USER",
+      password: "YOUR_PASSWORD",
+      database: "customer_due_db"
+    });
+  } catch (err) {
+    console.log("DB ERROR:", err);
+    throw err;
+  }
 }
