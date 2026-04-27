@@ -1,15 +1,28 @@
-import mysql from "mysql2/promise";
+import { connectDB } from "./db";
 
-export async function connectDB() {
+export default async function handler(req, res) {
   try {
-    return await mysql.createConnection({
-      host: "YOUR_HOST",
-      user: "YOUR_USER",
-      password: "YOUR_PASSWORD",
-      database: "customer_due_db"
+    const db = await connectDB();
+
+    const { username, password } = req.body;
+
+    const [rows] = await db.execute(
+      "SELECT * FROM users WHERE username=? AND password=?",
+      [username, password]
+    );
+
+    if (rows.length > 0) {
+      return res.json({ success: true, user: rows[0] });
+    }
+
+    return res.json({ success: false, message: "Invalid credentials" });
+
+  } catch (error) {
+    console.log("API ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      error: error.message
     });
-  } catch (err) {
-    console.log("DB ERROR:", err);
-    throw err;
   }
 }
