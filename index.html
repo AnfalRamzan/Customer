@@ -3,652 +3,489 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>Customer Due Management System | Pakistan</title>
+    <title>Pakistan Due Manager | Premium Collection System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1e3c72 0%,#2a5298 100%);min-height:100vh;}
-        
-        .login-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#1e3c72 0%,#2a5298 100%);display:flex;align-items:center;justify-content:center;z-index:2000;}
-        .login-card{background:white;border-radius:24px;padding:40px;width:90%;max-width:400px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:slideUp 0.5s ease;}
-        @keyframes slideUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
-        .login-icon{width:80px;height:80px;background:linear-gradient(135deg,#1e3c72,#2a5298);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}
-        .login-icon i{font-size:40px;color:white;}
-        .login-card h2{color:#1a1a2e;margin-bottom:10px;}
-        .login-card p{color:#666;margin-bottom:25px;}
-        .login-input{width:100%;padding:14px;margin:10px 0;border:2px solid #e0e0e0;border-radius:12px;font-size:1rem;}
-        .login-input:focus{outline:none;border-color:#1e3c72;}
-        .login-btn{width:100%;background:linear-gradient(135deg,#1e3c72,#2a5298);color:white;border:none;padding:14px;border-radius:12px;font-size:1rem;cursor:pointer;margin-top:15px;font-weight:600;}
-        .login-error{color:#dc3545;font-size:0.85rem;margin-top:10px;display:none;}
-        .demo-cred{margin-top:20px;padding:10px;background:#f8f9fa;border-radius:10px;font-size:0.8rem;color:#666;}
-        
-        .app{max-width:1400px;margin:0 auto;min-height:100vh;background:#f0f2f5;display:none;}
-        .app-header{background:white;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,0.08);position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:10px;}
-        .logo{display:flex;align-items:center;gap:12px;}
-        .logo i{font-size:28px;color:#1e3c72;}
-        .logo h1{font-size:1.4rem;color:#1a1a2e;}
-        .pkr-badge{background:#28a745;color:white;font-size:0.7rem;padding:3px 8px;border-radius:20px;margin-left:8px;}
-        .header-right{display:flex;align-items:center;gap:15px;flex-wrap:wrap;}
-        .action-buttons-group{display:flex;gap:10px;}
-        .import-btn,.export-btn{background:linear-gradient(135deg,#28a745,#20c997);color:white;border:none;padding:10px 20px;border-radius:10px;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;gap:8px;}
-        .import-btn{background:linear-gradient(135deg,#17a2b8,#138496);}
-        .user-info{display:flex;align-items:center;gap:10px;background:#f0f2f5;padding:8px 15px;border-radius:30px;}
-        .role-badge{padding:2px 8px;border-radius:20px;font-size:0.7rem;font-weight:600;}
-        .role-badge.admin{background:#dc3545;color:white;}
-        .role-badge.user{background:#28a745;color:white;}
-        .logout-btn{background:none;border:none;color:#dc3545;cursor:pointer;font-size:16px;padding:5px;}
-        
-        .main-container{padding:20px;display:flex;gap:20px;flex-wrap:wrap;}
-        .list-view{flex:1;min-width:300px;}
-        .side-panels{width:320px;display:flex;flex-direction:column;gap:20px;}
-        
-        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px;}
-        .stat-card{background:white;border-radius:16px;padding:18px;display:flex;align-items:center;gap:15px;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
-        .stat-icon{width:50px;height:50px;background:#e8eaf6;border-radius:12px;display:flex;align-items:center;justify-content:center;}
-        .stat-icon i{font-size:24px;color:#1e3c72;}
-        .stat-info{flex:1;}
-        .stat-label{font-size:0.75rem;color:#666;text-transform:uppercase;}
-        .stat-value{font-size:1.4rem;font-weight:bold;color:#1a1a2e;}
-        
-        .search-section{background:white;border-radius:16px;padding:16px;margin-bottom:20px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
-        .search-box{flex:3;position:relative;min-width:250px;}
-        .search-box i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#999;}
-        .search-box input{width:100%;padding:12px 12px 12px 42px;border:2px solid #e0e0e0;border-radius:12px;font-size:0.95rem;}
-        .filter-group{display:flex;gap:8px;flex-wrap:wrap;}
-        .filter-btn{padding:8px 18px;border:2px solid #e0e0e0;background:white;border-radius:25px;cursor:pointer;font-size:0.85rem;}
-        .filter-btn.active{background:#1e3c72;border-color:#1e3c72;color:white;}
-        .add-customer-btn{background:linear-gradient(135deg,#1e3c72,#2a5298);color:white;border:none;padding:10px 22px;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:600;}
-        
-        .table-container{background:white;border-radius:16px;overflow-x:auto;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
-        .customers-table{width:100%;border-collapse:collapse;min-width:700px;}
-        .customers-table th{padding:16px;text-align:left;font-weight:600;color:#555;border-bottom:2px solid #e0e0e0;}
-        .customers-table td{padding:14px 16px;border-bottom:1px solid #e0e0e0;}
-        .customers-table tbody tr{cursor:pointer;transition:background 0.2s;}
-        .customers-table tbody tr:hover{background:#f8f9fa;}
-        .due-row{border-left:3px solid #dc3545;}
-        .due-amount-value{color:#dc3545;font-weight:600;}
-        .action-buttons{display:flex;gap:8px;}
-        .action-btn{background:none;border:none;padding:6px 10px;border-radius:8px;cursor:pointer;}
-        .receive-action{color:#28a745;}
-        .edit-action{color:#ffc107;}
-        .delete-action{color:#dc3545;}
-        .photo-thumb{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #1e3c72;cursor:pointer;}
-        
-        .reminder-panel,.collection-panel{background:white;border-radius:16px;overflow:hidden;}
-        .reminder-header{background:linear-gradient(135deg,#ff6b6b,#ee5a24);color:white;padding:15px;display:flex;justify-content:space-between;}
-        .collection-header{background:linear-gradient(135deg,#28a745,#20c997);color:white;padding:15px;display:flex;justify-content:space-between;}
-        .reminder-list,.collection-list{max-height:300px;overflow-y:auto;}
-        .reminder-item{padding:12px;border-bottom:1px solid #eee;display:flex;gap:10px;}
-        .reminder-icon{width:35px;height:35px;background:#fee;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#dc3545;}
-        .reminder-info{flex:1;}
-        .reminder-customer{font-weight:600;font-size:0.85rem;}
-        .reminder-due{font-size:0.75rem;color:#dc3545;}
-        .collection-item{padding:12px;border-bottom:1px solid #eee;}
-        .collection-info{display:flex;justify-content:space-between;margin-bottom:5px;}
-        .collection-customer{font-weight:600;}
-        .collection-amount{color:#28a745;font-weight:600;}
-        .collection-details{font-size:0.7rem;color:#666;display:flex;gap:10px;}
-        .collection-empty{padding:30px;text-align:center;color:#999;}
-        
-        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);color:white;padding:12px 24px;border-radius:50px;z-index:1300;display:none;}
-        
-        @media (max-width:768px){.main-container{flex-direction:column;}.side-panels{width:100%;}.stats-grid{grid-template-columns:1fr;}}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f0f4f8 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+
+        /* ========== LOGIN SCREEN ========== */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .login-container {
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 48px;
+            padding: 40px;
+            width: 100%;
+            max-width: 460px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-header { text-align: center; margin-bottom: 30px; }
+        .login-header i { font-size: 65px; background: linear-gradient(135deg, #1e3c72, #2a5298); background-clip: text; -webkit-background-clip: text; color: transparent; }
+        .login-header h1 { font-size: 1.8rem; color: #1a1a2e; margin-top: 12px; }
+        .login-header p { color: #666; font-size: 0.9rem; }
+
+        .form-group { margin-bottom: 18px; }
+        .form-group input { width: 100%; padding: 14px 18px; border: 2px solid #e2e8f0; border-radius: 28px; font-size: 1rem; transition: all 0.3s; }
+        .form-group input:focus { outline: none; border-color: #1e3c72; box-shadow: 0 0 0 3px rgba(30,60,114,0.1); }
+
+        .login-btn { width: 100%; background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; border: none; padding: 14px; border-radius: 28px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform 0.2s; }
+        .login-btn:active { transform: scale(0.97); }
+
+        .error-msg { background: #fee; color: #dc3545; padding: 12px; border-radius: 20px; margin-bottom: 20px; display: none; text-align: center; font-size: 0.85rem; }
+
+        .role-cards { display: flex; gap: 15px; margin-bottom: 25px; }
+        .role-card { flex: 1; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 24px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.3s; }
+        .role-card:hover { transform: translateY(-3px); }
+        .role-card.selected { border-color: #1e3c72; background: linear-gradient(135deg, #e8eaf6, #fff); }
+        .role-card.admin.selected { border-color: #dc3545; }
+        .role-card.user.selected { border-color: #28a745; }
+        .role-icon { font-size: 42px; margin-bottom: 8px; }
+        .role-card.admin .role-icon { color: #dc3545; }
+        .role-card.user .role-icon { color: #28a745; }
+        .role-name { font-weight: 800; font-size: 1rem; }
+        .role-desc { font-size: 0.7rem; color: #666; }
+
+        .quick-buttons { display: flex; gap: 12px; margin-top: 18px; }
+        .quick-btn { flex: 1; padding: 12px; border: none; border-radius: 28px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        .quick-btn.admin-quick { background: linear-gradient(135deg, #dc3545, #c82333); color: white; }
+        .quick-btn.user-quick { background: linear-gradient(135deg, #28a745, #20c997); color: white; }
+
+        /* ========== MAIN APP ========== */
+        .app { max-width: 1600px; margin: 0 auto; padding: 20px; display: none; }
+
+        /* Modern Header */
+        .app-header {
+            background: white;
+            border-radius: 40px;
+            padding: 18px 32px;
+            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+        }
+
+        .logo { display: flex; align-items: center; gap: 12px; }
+        .logo i { font-size: 36px; background: linear-gradient(135deg, #1e3c72, #2a5298); background-clip: text; -webkit-background-clip: text; color: transparent; }
+        .logo h1 { font-size: 1.6rem; font-weight: 800; background: linear-gradient(135deg, #1e3c72, #2a5298); background-clip: text; -webkit-background-clip: text; color: transparent; }
+        .pkr-badge { background: #10b981; color: white; font-size: 0.7rem; padding: 4px 12px; border-radius: 40px; margin-left: 8px; }
+
+        .header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .role-badge { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 8px 20px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; }
+        .logout-btn { background: #ef4444; border: none; color: white; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        .logout-btn:hover { background: #dc2626; transform: scale(0.98); }
+        .tool-btn { background: white; border: 1.5px solid #e2e8f0; padding: 8px 22px; border-radius: 40px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .tool-btn:hover { background: #f8fafc; border-color: #94a3b8; }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 32px;
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            transition: all 0.3s;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.05); }
+
+        .stat-icon { width: 65px; height: 65px; background: linear-gradient(145deg, #eef2ff, #e0e7ff); border-radius: 30px; display: flex; align-items: center; justify-content: center; }
+        .stat-icon i { font-size: 32px; color: #1e3c72; }
+        .stat-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; }
+        .stat-value { font-size: 2rem; font-weight: 800; color: #0f172a; line-height: 1.2; }
+
+        /* Search & Filter */
+        .search-section {
+            background: white;
+            border-radius: 40px;
+            padding: 20px 28px;
+            margin-bottom: 28px;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        .search-box { flex: 2; min-width: 260px; position: relative; }
+        .search-box i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+        .search-box input { width: 100%; padding: 14px 18px 14px 48px; border: 2px solid #e2e8f0; border-radius: 60px; font-size: 0.95rem; transition: 0.2s; }
+        .search-box input:focus { outline: none; border-color: #1e3c72; box-shadow: 0 0 0 3px rgba(30,60,114,0.1); }
+
+        .mic-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: #f1f5f9; border: none; border-radius: 50%; width: 38px; height: 38px; cursor: pointer; font-size: 1rem; color: #1e3c72; transition: 0.2s; }
+        .mic-btn:hover { background: #e2e8f0; }
+
+        .filter-group { display: flex; gap: 12px; flex-wrap: wrap; }
+        .filter-btn { padding: 10px 28px; border: none; background: #f1f5f9; border-radius: 60px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .filter-btn.active { background: #1e3c72; color: white; box-shadow: 0 4px 12px rgba(30,60,114,0.2); }
+
+        .add-customer-btn { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; border: none; padding: 12px 32px; border-radius: 60px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
+        .add-customer-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 20px rgba(0,0,0,0.1); }
+
+        /* Layout */
+        .dashboard-layout { display: flex; gap: 28px; flex-wrap: wrap; }
+        .list-view { flex: 2.5; min-width: 280px; }
+        .side-panels { flex: 1.2; min-width: 280px; display: flex; flex-direction: column; gap: 28px; }
+
+        /* Table */
+        .table-container { background: white; border-radius: 32px; overflow-x: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.02); border: 1px solid #edf2f7; }
+        .customers-table { width: 100%; border-collapse: collapse; min-width: 1050px; }
+        .customers-table th { padding: 20px 16px; text-align: left; font-weight: 800; color: #334155; background: #fafcff; border-bottom: 2px solid #eef2ff; }
+        .customers-table td { padding: 16px; border-bottom: 1px solid #f0f2f5; vertical-align: middle; }
+        .customers-table tbody tr { cursor: pointer; transition: 0.15s; }
+        .customers-table tbody tr:hover { background: #f8fafd; }
+        .due-row { border-left: 4px solid #ef4444; background: #fffafb; }
+
+        .photo-circle { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 3px solid #1e3c72; cursor: pointer; transition: 0.2s; }
+        .photo-circle:hover { transform: scale(1.05); border-color: #10b981; }
+
+        .action-buttons { display: flex; gap: 8px; }
+        .action-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; padding: 8px 12px; border-radius: 40px; transition: 0.1s; }
+        .receive-action { color: #10b981; }
+        .receive-action:hover { background: #d1fae5; }
+        .edit-action { color: #f59e0b; }
+        .edit-action:hover { background: #fed7aa; }
+        .delete-action { color: #ef4444; }
+        .delete-action:hover { background: #fee2e2; }
+
+        /* Panels */
+        .reminder-panel, .collection-panel { background: white; border-radius: 32px; overflow: hidden; border: 1px solid #edf2f7; }
+        .reminder-header { background: linear-gradient(115deg, #f97316, #ef4444); padding: 18px 22px; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .collection-header { background: linear-gradient(115deg, #10b981, #059669); padding: 18px 22px; color: white; display: flex; justify-content: space-between; }
+        .reminder-list, .collection-list { max-height: 340px; overflow-y: auto; }
+        .reminder-item, .collection-item { padding: 14px 18px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 12px; }
+        .reminder-icon { width: 38px; height: 38px; background: #fff1f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #dc2626; }
+        .empty-placeholder { text-align: center; padding: 45px; color: #94a3b8; font-size: 0.9rem; }
+
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 14px 32px; border-radius: 60px; z-index: 2100; font-weight: 500; backdrop-filter: blur(8px); display: none; }
+
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); z-index: 3000; display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: 0.2s; }
+        .modal-overlay.active { visibility: visible; opacity: 1; }
+        .customer-form-modal { background: white; max-width: 750px; width: 92%; max-height: 85vh; overflow-y: auto; border-radius: 48px; padding: 32px 36px; }
+        .form-title { font-size: 1.7rem; font-weight: 800; margin-bottom: 24px; color: #1e3c72; display: flex; align-items: center; gap: 12px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+        .full-width { grid-column: span 2; }
+        .input-field { display: flex; flex-direction: column; gap: 6px; }
+        .input-field label { font-weight: 800; font-size: 0.7rem; text-transform: uppercase; color: #475569; letter-spacing: 0.5px; }
+        .input-field input, .input-field select { padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 28px; font-size: 0.9rem; transition: 0.2s; }
+        .input-field input:focus { outline: none; border-color: #1e3c72; }
+
+        .image-upload-section { background: #f8fafc; border-radius: 28px; padding: 16px; margin-top: 12px; }
+        .upload-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .remove-img-btn { background: #fee2e2; border: none; color: #dc2626; padding: 5px 14px; border-radius: 30px; cursor: pointer; font-size: 0.7rem; font-weight: 700; }
+        .customer-circle-preview { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #1e3c72; margin: 0 auto 12px; display: block; }
+        .bill-preview { width: 80px; height: 80px; border-radius: 16px; object-fit: cover; border: 2px solid #cbd5e1; cursor: pointer; margin: 0 auto; }
+        .upload-btn { background: #e2e8f0; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-size: 0.75rem; font-weight: 700; width: 100%; margin-top: 8px; transition: 0.2s; }
+        .upload-btn:hover { background: #cbd5e1; }
+
+        .form-actions { display: flex; justify-content: flex-end; gap: 14px; margin-top: 28px; }
+        .btn-cancel { background: #f1f5f9; border: none; padding: 12px 28px; border-radius: 40px; font-weight: 700; cursor: pointer; }
+        .btn-submit { background: linear-gradient(135deg, #1e3c72, #2a5298); border: none; padding: 12px 32px; border-radius: 40px; color: white; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-submit:hover { transform: scale(0.98); }
+
+        .zoom-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 4000; display: flex; align-items: center; justify-content: center; visibility: hidden; cursor: zoom-out; }
+        .zoom-modal.active { visibility: visible; }
+        .zoom-img { max-width: 90%; max-height: 90%; border-radius: 28px; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .app { padding: 12px; }
+            .app-header { padding: 15px 20px; }
+            .logo h1 { font-size: 1.2rem; }
+            .stats-grid { gap: 15px; }
+            .stat-card { padding: 16px 18px; }
+            .stat-value { font-size: 1.4rem; }
+            .search-section { padding: 15px 20px; }
+            .filter-btn { padding: 8px 18px; font-size: 0.8rem; }
+            .add-customer-btn { padding: 10px 20px; font-size: 0.85rem; }
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .customer-form-modal { padding: 20px; }
+            .role-cards { flex-direction: column; }
+            .quick-buttons { flex-direction: column; }
+            .header-right { width: 100%; justify-content: center; }
+        }
+
+        @media (max-width: 480px) {
+            .stat-card { flex-direction: column; text-align: center; }
+            .stat-icon { margin: 0 auto; }
+        }
     </style>
 </head>
 <body>
-
-<!-- Login Screen -->
-<div class="login-screen" id="loginScreen">
-    <div class="login-card">
-        <div class="login-icon"><i class="fas fa-users"></i></div>
-        <h2>Customer Due Manager</h2>
-        <p>Pakistan Payment Collection System</p>
-        <input type="text" id="loginUsername" class="login-input" placeholder="Username" value="admin">
-        <input type="password" id="loginPassword" class="login-input" placeholder="Password" value="admin123">
-        <button class="login-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
-        <div class="login-error" id="loginError"></div>
-        <div class="demo-cred"><i class="fas fa-info-circle"></i> Demo: admin/admin123 or user/user123</div>
-    </div>
-</div>
-
-<!-- Main App -->
-<div class="app" id="app">
-    <div class="app-header">
-        <div class="logo"><i class="fas fa-hand-holding-usd"></i><h1>Customer Due Manager <span class="pkr-badge">PKR</span></h1></div>
-        <div class="header-right">
-            <div class="user-info" id="userInfo"></div>
-            <div class="action-buttons-group" id="adminActions">
-                <button class="export-btn" id="exportAllBtn"><i class="fas fa-file-excel"></i> Export All</button>
-                <button class="export-btn" id="exportFilteredBtn"><i class="fas fa-filter"></i> Export Filtered</button>
+    <!-- LOGIN SCREEN -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-container">
+            <div class="login-header">
+                <i class="fas fa-hand-holding-usd"></i>
+                <h1>Customer Due Manager</h1>
+                <p>Pakistan - Payment Collection System</p>
+            </div>
+            <div id="errorMsg" class="error-msg"></div>
+            <div class="role-cards">
+                <div class="role-card admin" data-role="admin" data-username="admin" data-password="admin123">
+                    <div class="role-icon"><i class="fas fa-crown"></i></div>
+                    <div class="role-name">Administrator</div>
+                    <div class="role-desc">Full Access • Add/Edit/Delete</div>
+                </div>
+                <div class="role-card user" data-role="user" data-username="user" data-password="user123">
+                    <div class="role-icon"><i class="fas fa-user-check"></i></div>
+                    <div class="role-name">Payment Receiver</div>
+                    <div class="role-desc">Add Customer • Receive Payment</div>
+                </div>
+            </div>
+            <form id="loginForm">
+                <div class="form-group"><input type="text" id="username" placeholder="Username" autocomplete="off"></div>
+                <div class="form-group"><input type="password" id="password" placeholder="Password"></div>
+                <button type="submit" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</button>
+            </form>
+            <div class="quick-buttons">
+                <button type="button" class="quick-btn admin-quick" id="quickAdminBtn"><i class="fas fa-crown"></i> Admin Login</button>
+                <button type="button" class="quick-btn user-quick" id="quickUserBtn"><i class="fas fa-user-check"></i> User Login</button>
             </div>
         </div>
     </div>
 
-    <div class="main-container">
-        <div class="list-view">
-            <div class="stats-grid">
-                <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-info"><span class="stat-label">Total Customers</span><span class="stat-value" id="totalCustomers">0</span></div></div>
-                <div class="stat-card"><div class="stat-icon"><i class="fas fa-rupee-sign"></i></div><div class="stat-info"><span class="stat-label">Total Due</span><span class="stat-value" id="totalAmount">PKR 0</span></div></div>
-                <div class="stat-card"><div class="stat-icon"><i class="fas fa-exclamation-circle"></i></div><div class="stat-info"><span class="stat-label">Remaining Due</span><span class="stat-value" id="totalDue">PKR 0</span></div></div>
-            </div>
-
-            <div class="search-section">
-                <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search by ID, Name, CNIC, Phone, City..."></div>
-                <div class="filter-group">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="due">Has Due</button>
-                    <button class="filter-btn" data-filter="cleared">Cleared</button>
-                </div>
-                <button class="add-customer-btn" id="showAddBtn"><i class="fas fa-plus"></i> Add Customer</button>
-            </div>
-
-            <div class="table-container">
-                <table class="customers-table">
-                    <thead><tr><th>Photo</th><th>ID</th><th>Name</th><th>CNIC</th><th>City</th><th>Reference</th><th>Remaining Due</th><th>Actions</th></tr></thead>
-                    <tbody id="customersList"><tr><td colspan="8" class="collection-empty">Loading customers...</td></tr></tbody>
-                </table>
+    <!-- MAIN APP -->
+    <div class="app" id="app">
+        <div class="app-header">
+            <div class="logo"><i class="fas fa-landmark"></i><h1>Due Manager <span class="pkr-badge">PKR</span></h1></div>
+            <div class="header-right">
+                <span class="role-badge" id="userRoleBadge">Admin</span>
+                <button class="tool-btn" id="importBtn"><i class="fas fa-upload"></i> Import</button>
+                <button class="tool-btn" id="exportAllBtn"><i class="fas fa-download"></i> Export</button>
+                <button class="tool-btn" id="exportFilteredBtn"><i class="fas fa-filter"></i> Filtered</button>
+                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         </div>
 
-        <div class="side-panels">
-            <div class="reminder-panel"><div class="reminder-header"><h3><i class="fas fa-bell"></i> Payment Reminders</h3><span class="reminder-count" id="reminderCount">0</span></div><div id="reminderList" class="reminder-list"><div class="collection-empty">Loading...</div></div></div>
-            <div class="collection-panel"><div class="collection-header"><h3><i class="fas fa-money-bill-wave"></i> Today's Collection</h3><span class="collection-total" id="todayCollectionTotal">PKR 0</span></div><div id="todayCollectionList" class="collection-list"><div class="collection-empty">Loading...</div></div></div>
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div><div class="stat-label">Total Customers</div><div class="stat-value" id="totalCustomers">0</div></div></div>
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-rupee-sign"></i></div><div><div class="stat-label">Total Due</div><div class="stat-value" id="totalAmount">PKR 0</div></div></div>
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div><div class="stat-label">Remaining Due</div><div class="stat-value" id="totalDue">PKR 0</div></div></div>
+        </div>
+
+        <div class="search-section">
+            <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search by name, CNIC, city, phone..."><button class="mic-btn" id="micBtn"><i class="fas fa-microphone"></i></button></div>
+            <div class="filter-group">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="due">Has Due</button>
+                <button class="filter-btn" data-filter="cleared">Cleared</button>
+            </div>
+            <button class="add-customer-btn" id="openModalBtn"><i class="fas fa-plus-circle"></i> Add Customer</button>
+        </div>
+
+        <div class="dashboard-layout">
+            <div class="list-view"><div class="table-container"><table class="customers-table"><thead><tr><th>Photo</th><th>ID</th><th>Name</th><th>CNIC</th><th>City</th><th>Reference</th><th>Due</th><th>Actions</th></tr></thead><tbody id="customersList"></tbody></table></div></div>
+            <div class="side-panels">
+                <div class="reminder-panel"><div class="reminder-header"><h3><i class="fas fa-bell"></i> Reminders</h3><span id="reminderCount">0</span></div><div id="reminderList" class="reminder-list"></div></div>
+                <div class="collection-panel"><div class="collection-header"><h3><i class="fas fa-money-bill-wave"></i> Today's Collection</h3><span id="todayTotal">PKR 0</span></div><div id="collectionList" class="collection-list"></div></div>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Toast -->
-<div id="toast" class="toast"></div>
-
-<script>
-// ============================================
-// DATABASE CONNECTED FRONTEND
-// ============================================
-
-// Use relative path - same origin as server
-let API_URL = '/api';
-let token = localStorage.getItem('token');
-let currentUser = null;
-let customersData = [];
-let currentFilter = 'all';
-let currentSearchTerm = '';
-let searchTimeout = null;
-
-// ============================================
-// API CALLS
-// ============================================
-async function apiCall(endpoint, options = {}) {
-    try {
-        const response = await fetch(`${API_URL}${endpoint}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token ? `Bearer ${token}` : ''
-            },
-            ...options
-        });
-        
-        if (response.status === 401) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            document.getElementById('loginScreen').style.display = 'flex';
-            document.getElementById('app').style.display = 'none';
-            showToast('Session expired. Please login again.', 'error');
-            throw new Error('Session expired');
-        }
-        
-        const data = await response.json();
-        if (!data.success) throw new Error(data.message);
-        return data;
-    } catch (error) {
-        console.error('API Error:', error);
-        if (error.message !== 'Session expired') {
-            showToast(error.message, 'error');
-        }
-        throw error;
-    }
-}
-
-// ============================================
-// AUTH FUNCTIONS
-// ============================================
-async function login(username, password) {
-    try {
-        const response = await fetch(`${API_URL}/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-        
-        const data = await response.json();
-        if (data.success) {
-            token = data.token;
-            currentUser = data.user;
-            localStorage.setItem('token', token);
-            localStorage.setItem('user', JSON.stringify(currentUser));
-            return true;
-        }
-        return false;
-    } catch (error) {
-        showToast('Login failed: ' + error.message, 'error');
-        return false;
-    }
-}
-
-function logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    token = null;
-    currentUser = null;
-    document.getElementById('loginScreen').style.display = 'flex';
-    document.getElementById('app').style.display = 'none';
-    showToast('Logged out successfully', 'success');
-}
-
-function updateUserUI() {
-    const userInfo = document.getElementById('userInfo');
-    if (userInfo && currentUser) {
-        userInfo.innerHTML = `
-            <i class="fas fa-user-circle"></i>
-            <span>${currentUser.fullName}</span>
-            <span class="role-badge ${currentUser.role}">${currentUser.role}</span>
-            <button onclick="window.logout()" class="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
-        `;
-    }
-    
-    const adminActions = document.getElementById('adminActions');
-    if (adminActions) {
-        adminActions.style.display = currentUser?.role === 'admin' ? 'flex' : 'none';
-    }
-}
-
-// ============================================
-// DATA LOADING
-// ============================================
-async function loadCustomers() {
-    try {
-        let url = '/customers';
-        const params = [];
-        if (currentSearchTerm) params.push(`search=${encodeURIComponent(currentSearchTerm)}`);
-        if (currentFilter !== 'all') params.push(`filter=${currentFilter}`);
-        if (params.length) url += `?${params.join('&')}`;
-        
-        const result = await apiCall(url);
-        customersData = result.data || [];
-        renderCustomersTable();
-        return customersData;
-    } catch (error) {
-        return [];
-    }
-}
-
-async function loadStats() {
-    try {
-        const result = await apiCall('/stats');
-        return result.data;
-    } catch (error) {
-        return { totalCustomers: 0, totalAmount: 0, totalDue: 0 };
-    }
-}
-
-async function loadTodayCollections() {
-    try {
-        const result = await apiCall('/today-collections');
-        return { data: result.data || [], total: result.total || 0 };
-    } catch (error) {
-        return { data: [], total: 0 };
-    }
-}
-
-async function loadReminders() {
-    try {
-        const result = await apiCall('/reminders/today');
-        return result.data || [];
-    } catch (error) {
-        return [];
-    }
-}
-
-// ============================================
-// CRUD OPERATIONS
-// ============================================
-async function addCustomerToDB(customer) {
-    const result = await apiCall('/customers', {
-        method: 'POST',
-        body: JSON.stringify(customer)
-    });
-    return result.id;
-}
-
-async function deleteCustomerFromDB(id) {
-    await apiCall(`/customers/${id}`, { method: 'DELETE' });
-}
-
-async function receivePaymentInDB(customerId, amount, paymentDate, paymentMethod, referenceNo, notes) {
-    await apiCall('/payments', {
-        method: 'POST',
-        body: JSON.stringify({ customerId, amount, paymentDate, paymentMethod, referenceNo, notes })
-    });
-}
-
-async function markReminderSent(reminderId) {
-    await apiCall(`/reminders/${reminderId}/sent`, { method: 'PUT' });
-}
-
-// ============================================
-// UI RENDERING
-// ============================================
-function formatPKR(amount) {
-    const num = parseFloat(amount || 0);
-    return new Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR', minimumFractionDigits: 0 }).format(num);
-}
-
-function escapeHtml(str) {
-    if (!str) return '';
-    return String(str).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
-}
-
-function showToast(message, type = 'success') {
-    const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.style.backgroundColor = type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8';
-    toast.style.display = 'block';
-    setTimeout(() => toast.style.display = 'none', 3000);
-}
-
-function renderCustomersTable() {
-    const tbody = document.getElementById('customersList');
-    const isAdmin = currentUser?.role === 'admin';
-    const customers = customersData;
-    
-    if (!customers.length) {
-        tbody.innerHTML = '<tr><td colspan="8" class="collection-empty">No customers found</td></tr>';
-        return;
-    }
-    
-    tbody.innerHTML = customers.map(c => `
-        <tr class="${c.remaining_due > 0 ? 'due-row' : ''}" onclick="window.viewCustomer(${c.id})">
-            <td onclick="event.stopPropagation()">
-                ${c.photo_data ? `<img src="${c.photo_data}" class="photo-thumb" onclick="event.stopPropagation(); window.openZoomModal('${c.photo_data}')">` : '<i class="fas fa-user-circle" style="font-size:28px;color:#999"></i>'}
-            </td>
-            <td onclick="window.viewCustomer(${c.id})">#${c.id}</td>
-            <td onclick="window.viewCustomer(${c.id})"><strong>${escapeHtml(c.name)}</strong></td>
-            <td onclick="window.viewCustomer(${c.id})">${escapeHtml(c.cnic || '—')}</td>
-            <td onclick="window.viewCustomer(${c.id})">${escapeHtml(c.city || '—')}</td>
-            <td onclick="window.viewCustomer(${c.id})">${escapeHtml(c.reference_name || '—')}</td>
-            <td onclick="window.viewCustomer(${c.id})" class="${c.remaining_due > 0 ? 'due-amount-value' : ''}">${formatPKR(c.remaining_due)}</td>
-            <td class="action-buttons" onclick="event.stopPropagation()">
-                <button class="action-btn receive-action" onclick="window.openPaymentModal(${c.id}, '${escapeHtml(c.name)}', ${c.remaining_due})"><i class="fas fa-money-bill-wave"></i></button>
-                ${isAdmin ? `
-                    <button class="action-btn delete-action" onclick="window.confirmDeleteCustomer(${c.id}, '${escapeHtml(c.name)}')"><i class="fas fa-trash"></i></button>
-                ` : ''}
-            </td>
-        </tr>
-    `).join('');
-}
-
-function renderRemindersList(reminders) {
-    const container = document.getElementById('reminderList');
-    if (reminders.length) {
-        container.innerHTML = reminders.map(r => `
-            <div class="reminder-item">
-                <div class="reminder-icon"><i class="fas fa-bell"></i></div>
-                <div class="reminder-info">
-                    <div class="reminder-customer">${escapeHtml(r.customer_name)}</div>
-                    <div class="reminder-due">Due: ${formatPKR(r.remaining_due)}</div>
-                    <div class="reminder-phone"><i class="fas fa-phone"></i> ${r.phone || 'No phone'}</div>
+    <!-- ADD CUSTOMER MODAL -->
+    <div id="customerModal" class="modal-overlay">
+        <div class="customer-form-modal">
+            <div class="form-title"><i class="fas fa-user-plus"></i> Add New Customer</div>
+            <form id="customerForm">
+                <div class="form-grid">
+                    <div class="input-field full-width"><label>Full Name *</label><input type="text" id="fullName" required></div>
+                    <div class="input-field"><label>CNIC</label><input type="text" id="cnic" placeholder="42201-1234567-8"></div>
+                    <div class="input-field"><label>Phone *</label><input type="text" id="phone" required></div>
+                    <div class="input-field"><label>Email</label><input type="email" id="email"></div>
+                    <div class="input-field"><label>City *</label><input type="text" id="city" required></div>
+                    <div class="input-field"><label>Due Amount (PKR)</label><input type="number" id="dueAmount" value="0"></div>
+                    <div class="input-field"><label>Address</label><input type="text" id="address"></div>
+                    <div class="input-field"><label>Reference Name</label><input type="text" id="refName"></div>
+                    <div class="input-field"><label>Reference Contact</label><input type="text" id="refContact"></div>
+                    <div class="input-field"><label>Promise Date</label><input type="date" id="promiseDate"></div>
+                    <div class="input-field"><label>CO / Business</label><input type="text" id="co"></div>
+                    <div class="input-field"><label>Colony</label><input type="text" id="colony"></div>
+                    <div class="input-field full-width"><label>Reason</label><input type="text" id="reason"></div>
                 </div>
-                <button class="reminder-action-btn" onclick="window.markReminderAsSent(${r.id})">Mark Done</button>
-            </div>
-        `).join('');
-    } else {
-        container.innerHTML = '<div class="collection-empty">No reminders</div>';
-    }
-}
 
-function renderCollectionsList(collections) {
-    const container = document.getElementById('todayCollectionList');
-    if (collections.length) {
-        container.innerHTML = collections.map(p => `
-            <div class="collection-item">
-                <div class="collection-info">
-                    <span class="collection-customer">${escapeHtml(p.customer_name)}</span>
-                    <span class="collection-amount">${formatPKR(p.amount)}</span>
+                <div class="image-upload-section">
+                    <div class="upload-header"><h4><i class="fas fa-camera"></i> Customer Photo</h4><button type="button" class="remove-img-btn" id="removeCustomerPhotoBtn"><i class="fas fa-trash"></i> Remove</button></div>
+                    <div id="customerPhotoPreview" style="text-align:center;"><i class="fas fa-user-circle" style="font-size: 80px; color: #cbd5e1;"></i></div>
+                    <input type="file" id="customerPhotoInput" accept="image/*" style="display:none">
+                    <button type="button" class="upload-btn" id="uploadCustomerPhotoBtn"><i class="fas fa-cloud-upload-alt"></i> Upload Photo</button>
                 </div>
-                <div class="collection-details">
-                    <span>${p.payment_method}</span>
-                    <span>By: ${p.received_by_name || 'System'}</span>
+
+                <div class="image-upload-section">
+                    <div class="upload-header"><h4><i class="fas fa-file-invoice"></i> Bill Photo</h4><button type="button" class="remove-img-btn" id="removeBillPhotoBtn"><i class="fas fa-trash"></i> Remove</button></div>
+                    <div id="billPhotoPreview" style="text-align:center;"><i class="fas fa-file-image" style="font-size: 60px; color: #cbd5e1;"></i></div>
+                    <input type="file" id="billPhotoInput" accept="image/*" style="display:none">
+                    <button type="button" class="upload-btn" id="uploadBillPhotoBtn"><i class="fas fa-cloud-upload-alt"></i> Upload Bill</button>
                 </div>
-            </div>
-        `).join('');
-    } else {
-        container.innerHTML = '<div class="collection-empty">No collections today</div>';
-    }
-}
 
-// ============================================
-// REFRESH DASHBOARD
-// ============================================
-async function refreshDashboard() {
-    if (!currentUser) return;
-    
-    const [customers, stats, collections, reminders] = await Promise.all([
-        loadCustomers(),
-        loadStats(),
-        loadTodayCollections(),
-        loadReminders()
-    ]);
-    
-    document.getElementById('totalCustomers').textContent = stats.totalCustomers || 0;
-    document.getElementById('totalAmount').textContent = formatPKR(stats.totalAmount || 0);
-    document.getElementById('totalDue').textContent = formatPKR(stats.totalDue || 0);
-    document.getElementById('todayCollectionTotal').textContent = formatPKR(collections.total || 0);
-    document.getElementById('reminderCount').textContent = reminders.length || 0;
-    
-    renderRemindersList(reminders);
-    renderCollectionsList(collections.data);
-}
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="closeModalBtn">Cancel</button>
+                    <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Save Customer</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-// ============================================
-// CUSTOMER FUNCTIONS
-// ============================================
-window.viewCustomer = async function(id) {
-    try {
-        const result = await apiCall(`/customers/${id}`);
-        const customer = result.data;
-        showToast(`Viewing ${customer.name} - Due: ${formatPKR(customer.remaining_due)}`, 'info');
-    } catch (error) {
-        showToast('Error loading customer', 'error');
-    }
-};
+    <div id="zoomModal" class="zoom-modal"><img id="zoomImg" class="zoom-img"></div>
+    <div id="toast" class="toast"></div>
 
-window.confirmDeleteCustomer = function(id, name) {
-    if (currentUser?.role !== 'admin') {
-        showToast('Only admin can delete', 'error');
-        return;
-    }
-    if (confirm(`Are you sure you want to delete ${name}?`)) {
-        deleteCustomerFromDB(id).then(() => {
-            showToast('Customer deleted successfully', 'success');
-            refreshDashboard();
-        }).catch(() => showToast('Delete failed', 'error'));
-    }
-};
-
-window.openPaymentModal = function(id, name, due) {
-    const amount = prompt(`Enter payment amount for ${name} (Max: ${formatPKR(due)})`);
-    if (amount && !isNaN(amount) && parseFloat(amount) > 0 && parseFloat(amount) <= due) {
-        receivePaymentInDB(id, parseFloat(amount), new Date().toISOString().split('T')[0], 'cash', '', '')
-            .then(() => {
-                showToast(`Received ${formatPKR(parseFloat(amount))} from ${name}`, 'success');
-                refreshDashboard();
-            })
-            .catch(() => showToast('Payment failed', 'error'));
-    } else if (amount) {
-        showToast('Invalid amount', 'error');
-    }
-};
-
-window.markReminderAsSent = async function(id) {
-    await markReminderSent(id);
-    refreshDashboard();
-};
-
-// ============================================
-// SEARCH & FILTER
-// ============================================
-function handleSearch() {
-    if (searchTimeout) clearTimeout(searchTimeout);
-    currentSearchTerm = document.getElementById('searchInput').value.trim();
-    searchTimeout = setTimeout(() => refreshDashboard(), 300);
-}
-
-function setFilter(filter) {
-    currentFilter = filter;
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.dataset.filter === filter) btn.classList.add('active');
-    });
-    refreshDashboard();
-}
-
-// ============================================
-// EXPORT
-// ============================================
-async function exportData(filtered = false) {
-    let url = '/export';
-    if (filtered) {
-        const params = new URLSearchParams();
-        if (currentSearchTerm) params.append('search', currentSearchTerm);
-        if (currentFilter !== 'all') params.append('filter', currentFilter);
-        if (params.toString()) url += `?${params.toString()}`;
-    }
-    
-    try {
-        const response = await fetch(`${API_URL}${url}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const result = await response.json();
+    <script>
+        // HARDCODED CREDENTIALS
+        const USERS = { admin: { password: "admin123", role: "admin", name: "Administrator" }, user: { password: "user123", role: "user", name: "Payment Receiver" } };
+        const STORAGE = { CUSTOMERS: 'due_customers_final', PAYMENTS: 'due_payments_final' };
         
-        if (result.success && result.data.length) {
-            const headers = ['ID', 'Name', 'CNIC', 'Phone', 'Email', 'City', 'Due Amount', 'Paid Amount', 'Remaining Due', 'Reference'];
-            const csvRows = [headers.join(',')];
-            
-            for (const c of result.data) {
-                const row = [
-                    c.id, `"${c.name || ''}"`, `"${c.cnic || ''}"`, `"${c.phone || ''}"`,
-                    `"${c.email || ''}"`, `"${c.city || ''}"`, c.due_amount, c.total_paid || 0,
-                    c.remaining_due || 0, `"${c.reference_name || ''}"`
-                ];
-                csvRows.push(row.join(','));
+        let currentUser = null, allCustomers = [], currentFilter = 'all', currentSearch = '', editModeId = null;
+        let customerPhotoData = null, billPhotoData = null;
+
+        function showToast(msg, type = 'success') { let t = document.getElementById('toast'); t.textContent = msg; t.style.backgroundColor = type === 'success' ? '#10b981' : '#ef4444'; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 2800); }
+        function formatPKR(amt) { return 'PKR ' + new Intl.NumberFormat('en-PK').format(amt || 0); }
+        function escapeHtml(s) { if (!s) return ''; return String(s).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
+        function getCustomers() { return JSON.parse(localStorage.getItem(STORAGE.CUSTOMERS)) || []; }
+        function saveCustomers(c) { localStorage.setItem(STORAGE.CUSTOMERS, JSON.stringify(c)); }
+        function getPayments() { return JSON.parse(localStorage.getItem(STORAGE.PAYMENTS)) || []; }
+        function savePayments(p) { localStorage.setItem(STORAGE.PAYMENTS, JSON.stringify(p)); }
+
+        function initDB() {
+            if (!localStorage.getItem(STORAGE.CUSTOMERS)) {
+                let sample = [{ id: 1001, name: "Muhammad Ali", cnic: "42101-1234567-8", phone: "03001234567", email: "ali@ex.com", city: "Karachi", due_amount: 25000, total_paid: 5000, remaining_due: 20000, entry_date: "2025-03-01", address: "Defence", reason: "Shop Balance", photo_data: "", bill_photo_data: "", promise_date: "2025-04-30", reference_name: "Rizwan", reference_contact: "03111234567", co: "Ali Traders", colony: "Clifton" }];
+                saveCustomers(sample);
             }
-            
-            const blob = new Blob(['\uFEFF' + csvRows.join('\n')], { type: 'text/csv' });
-            const url_blob = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url_blob;
-            a.download = `customers_${filtered ? 'filtered_' : 'all'}_${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-            URL.revokeObjectURL(url_blob);
-            showToast(`Exported ${result.data.length} customers`, 'success');
-        } else {
-            showToast('No data to export', 'error');
+            if (!localStorage.getItem(STORAGE.PAYMENTS)) savePayments([{ id: 1, customerId: 1001, amount: 5000, payment_date: new Date().toISOString().split('T')[0], payment_method: "Cash", reference_no: "RC001" }]);
+            let custs = getCustomers(), pays = getPayments();
+            custs = custs.map(c => { let paid = pays.filter(p => p.customerId === c.id).reduce((s, p) => s + p.amount, 0); return { ...c, total_paid: paid, remaining_due: Math.max(0, c.due_amount - paid) }; });
+            saveCustomers(custs);
         }
-    } catch (error) {
-        showToast('Export failed', 'error');
-    }
-}
 
-// ============================================
-// ZOOM FUNCTIONS
-// ============================================
-window.openZoomModal = function(src) {
-    const win = window.open();
-    win.document.write(`<img src="${src}" style="max-width:100%;max-height:100%;margin:auto;display:block;">`);
-};
-
-// ============================================
-// ADD CUSTOMER MODAL
-// ============================================
-function openAddModal() {
-    const name = prompt('Enter customer name:');
-    if (!name) return;
-    const city = prompt('Enter city:');
-    if (!city) return;
-    const dueAmount = prompt('Enter due amount (PKR):', '0');
-    
-    addCustomerToDB({
-        name: name,
-        city: city,
-        due_amount: parseFloat(dueAmount) || 0,
-        phone: '',
-        cnic: '',
-        email: '',
-        entry_date: new Date().toISOString().split('T')[0],
-        address: '',
-        country: 'Pakistan',
-        reason: '',
-        photo_data: null,
-        bill_photo_data: null,
-        promise_date: '',
-        reference_name: '',
-        reference_contact: '',
-        co: '',
-        colony: ''
-    }).then(() => {
-        showToast('Customer added successfully', 'success');
-        refreshDashboard();
-    }).catch(() => showToast('Failed to add customer', 'error'));
-}
-
-// ============================================
-// INITIALIZATION
-// ============================================
-async function init() {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser && token) {
-        currentUser = JSON.parse(savedUser);
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
-        updateUserUI();
-        await refreshDashboard();
-        
-        setInterval(() => {
-            if (currentUser) refreshDashboard();
-        }, 30000);
-    }
-    
-    document.getElementById('loginBtn').addEventListener('click', async () => {
-        const username = document.getElementById('loginUsername').value;
-        const password = document.getElementById('loginPassword').value;
-        
-        const success = await login(username, password);
-        if (success) {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('app').style.display = 'block';
-            updateUserUI();
-            await refreshDashboard();
-            showToast(`Welcome ${currentUser.fullName}!`, 'success');
-        } else {
-            document.getElementById('loginError').textContent = 'Invalid credentials';
-            document.getElementById('loginError').style.display = 'block';
+        function filterCustomers() {
+            let f = [...allCustomers];
+            if (currentSearch.trim()) { let t = currentSearch.toLowerCase(); f = f.filter(c => c.name.toLowerCase().includes(t) || (c.cnic && c.cnic.includes(t)) || (c.city && c.city.toLowerCase().includes(t)) || (c.phone && c.phone.includes(t))); }
+            if (currentFilter === 'due') f = f.filter(c => c.remaining_due > 0);
+            if (currentFilter === 'cleared') f = f.filter(c => c.remaining_due === 0);
+            return f;
         }
-    });
-    
-    document.getElementById('showAddBtn')?.addEventListener('click', openAddModal);
-    document.getElementById('exportAllBtn')?.addEventListener('click', () => exportData(false));
-    document.getElementById('exportFilteredBtn')?.addEventListener('click', () => exportData(true));
-    document.getElementById('searchInput')?.addEventListener('input', handleSearch);
-    
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => setFilter(btn.dataset.filter));
-    });
-}
 
-// Make functions global
-window.logout = logout;
+        function renderTable() {
+            let filtered = filterCustomers();
+            let isAdmin = currentUser?.role === 'admin';
+            let tbody = document.getElementById('customersList');
+            if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-placeholder">📭 No customers found</td></tr>'; return; }
+            tbody.innerHTML = filtered.map(c => `<tr class="${c.remaining_due > 0 ? 'due-row' : ''}">
+                <td>${c.photo_data ? `<img src="${c.photo_data}" class="photo-circle" onclick="event.stopPropagation(); openZoom('${c.photo_data}')">` : '<i class="fas fa-user-circle" style="font-size:44px; color:#94a3b8;"></i>'}</td>
+                <td>#${c.id}</td><td><strong>${escapeHtml(c.name)}</strong></td><td>${escapeHtml(c.cnic || '—')}</td><td>${escapeHtml(c.city || '—')}</td>
+                <td>${escapeHtml(c.reference_name || '—')}</td><td class="${c.remaining_due > 0 ? 'due-amount-value' : ''}">${formatPKR(c.remaining_due)}</td>
+                <td class="action-buttons">
+                    <button class="action-btn receive-action" onclick="quickPayment(${c.id}, ${c.remaining_due}, '${escapeHtml(c.name)}')"><i class="fas fa-money-bill-wave"></i></button>
+                    ${isAdmin ? `<button class="action-btn edit-action" onclick="openEditModal(${c.id})"><i class="fas fa-edit"></i></button><button class="action-btn delete-action" onclick="deleteCustomer(${c.id}, '${escapeHtml(c.name)}')"><i class="fas fa-trash-alt"></i></button>` : ''}
+                </td>
+            </tr>`).join('');
+        }
 
-// Start
-init();
-</script>
+        function refreshStats() {
+            let customers = allCustomers;
+            document.getElementById('totalCustomers').innerText = customers.length;
+            document.getElementById('totalAmount').innerHTML = formatPKR(customers.reduce((s, c) => s + c.due_amount, 0));
+            document.getElementById('totalDue').innerHTML = formatPKR(customers.reduce((s, c) => s + c.remaining_due, 0));
+            let today = new Date().toISOString().split('T')[0];
+            let reminders = customers.filter(c => c.remaining_due > 0 && c.promise_date && c.promise_date <= today).slice(0, 5);
+            document.getElementById('reminderCount').innerText = reminders.length;
+            document.getElementById('reminderList').innerHTML = reminders.length ? reminders.map(r => `<div class="reminder-item"><div class="reminder-icon"><i class="fas fa-bell"></i></div><div><strong>${escapeHtml(r.name)}</strong><br><small>Due: ${formatPKR(r.remaining_due)}</small></div></div>`).join('') : '<div class="empty-placeholder">✅ No reminders</div>';
+            let pays = getPayments(), todayPays = pays.filter(p => p.payment_date === today);
+            document.getElementById('todayTotal').innerHTML = formatPKR(todayPays.reduce((s, p) => s + p.amount, 0));
+            document.getElementById('collectionList').innerHTML = todayPays.length ? todayPays.map(p => { let c = allCustomers.find(c => c.id === p.customerId); return `<div class="collection-item"><i class="fas fa-wallet"></i> <strong>${escapeHtml(c?.name || 'Unknown')}</strong> - ${formatPKR(p.amount)}</div>`; }).join('') : '<div class="empty-placeholder">💰 No collections today</div>';
+        }
+        function refreshAll() { allCustomers = getCustomers(); renderTable(); refreshStats(); }
+
+        // CRUD
+        window.quickPayment = (id, due, name) => {
+            if (due <= 0) return showToast("No due amount", 'error');
+            let amt = parseFloat(prompt(`Enter payment for ${name}\nMax: ${formatPKR(due)}`));
+            if (isNaN(amt) || amt <= 0 || amt > due) return;
+            let pays = getPayments();
+            pays.push({ id: Date.now(), customerId: id, amount: amt, payment_date: new Date().toISOString().split('T')[0], payment_method: "Cash", reference_no: "PAY" + Math.floor(Math.random() * 9999) });
+            savePayments(pays);
+            let custs = getCustomers();
+            custs = custs.map(c => { if (c.id === id) { let paid = pays.filter(p => p.customerId === id).reduce((s, p) => s + p.amount, 0); return { ...c, total_paid: paid, remaining_due: Math.max(0, c.due_amount - paid) }; } return c; });
+            saveCustomers(custs); refreshAll(); showToast(`✅ Received ${formatPKR(amt)} from ${name}`);
+        };
+        window.deleteCustomer = (id, name) => { if (currentUser?.role !== 'admin') return showToast("⛔ Only admin can delete", 'error'); if (confirm(`Delete "${name}" permanently?`)) { let custs = getCustomers().filter(c => c.id !== id); let pays = getPayments().filter(p => p.customerId !== id); saveCustomers(custs); savePayments(pays); refreshAll(); showToast(`🗑️ ${name} deleted`); } };
+        window.openZoom = (src) => { document.getElementById('zoomImg').src = src; document.getElementById('zoomModal').classList.add('active'); };
+        document.getElementById('zoomModal').addEventListener('click', () => document.getElementById('zoomModal').classList.remove('active'));
+
+        // Image Upload
+        function updateCustomerPreview() { document.getElementById('customerPhotoPreview').innerHTML = customerPhotoData ? `<img src="${customerPhotoData}" class="customer-circle-preview" onclick="openZoom('${customerPhotoData}')">` : '<i class="fas fa-user-circle" style="font-size: 80px; color: #cbd5e1;"></i>'; }
+        function updateBillPreview() { document.getElementById('billPhotoPreview').innerHTML = billPhotoData ? `<img src="${billPhotoData}" class="bill-preview" onclick="openZoom('${billPhotoData}')">` : '<i class="fas fa-file-image" style="font-size: 60px; color: #cbd5e1;"></i>'; }
+        document.getElementById('uploadCustomerPhotoBtn').onclick = () => document.getElementById('customerPhotoInput').click();
+        document.getElementById('uploadBillPhotoBtn').onclick = () => document.getElementById('billPhotoInput').click();
+        document.getElementById('customerPhotoInput').onchange = (e) => { let f = e.target.files[0]; if (f) { let r = new FileReader(); r.onload = (ev) => { customerPhotoData = ev.target.result; updateCustomerPreview(); }; r.readAsDataURL(f); } };
+        document.getElementById('billPhotoInput').onchange = (e) => { let f = e.target.files[0]; if (f) { let r = new FileReader(); r.onload = (ev) => { billPhotoData = ev.target.result; updateBillPreview(); }; r.readAsDataURL(f); } };
+        document.getElementById('removeCustomerPhotoBtn').onclick = () => { customerPhotoData = null; updateCustomerPreview(); };
+        document.getElementById('removeBillPhotoBtn').onclick = () => { billPhotoData = null; updateBillPreview(); };
+
+        function resetModal() { document.getElementById('customerForm').reset(); editModeId = null; customerPhotoData = null; billPhotoData = null; updateCustomerPreview(); updateBillPreview(); document.getElementById('dueAmount').value = 0; }
+        window.openEditModal = (id) => { if (currentUser?.role !== 'admin') return showToast("⛔ Only admin can edit", 'error'); let cust = allCustomers.find(c => c.id === id); if (cust) { editModeId = id; document.getElementById('fullName').value = cust.name; document.getElementById('cnic').value = cust.cnic || ''; document.getElementById('phone').value = cust.phone; document.getElementById('email').value = cust.email || ''; document.getElementById('city').value = cust.city; document.getElementById('dueAmount').value = cust.due_amount; document.getElementById('address').value = cust.address || ''; document.getElementById('refName').value = cust.reference_name || ''; document.getElementById('refContact').value = cust.reference_contact || ''; document.getElementById('promiseDate').value = cust.promise_date || ''; document.getElementById('co').value = cust.co || ''; document.getElementById('colony').value = cust.colony || ''; document.getElementById('reason').value = cust.reason || ''; customerPhotoData = cust.photo_data; billPhotoData = cust.bill_photo_data; updateCustomerPreview(); updateBillPreview(); document.getElementById('customerModal').classList.add('active'); } };
+        document.getElementById('openModalBtn').addEventListener('click', () => { resetModal(); editModeId = null; document.getElementById('customerModal').classList.add('active'); });
+        document.getElementById('closeModalBtn').addEventListener('click', () => document.getElementById('customerModal').classList.remove('active'));
+        document.getElementById('customerForm').addEventListener('submit', (e) => { e.preventDefault(); let name = document.getElementById('fullName').value.trim(), city = document.getElementById('city').value.trim(), phone = document.getElementById('phone').value.trim(); if (!name || !city || !phone) return showToast("Name, City & Phone required", 'error'); let due = parseFloat(document.getElementById('dueAmount').value) || 0; let custs = getCustomers(); if (editModeId) { let index = custs.findIndex(c => c.id === editModeId); if (index !== -1) { custs[index] = { ...custs[index], name, cnic: document.getElementById('cnic').value, phone, email: document.getElementById('email').value, city, due_amount: due, address: document.getElementById('address').value, reference_name: document.getElementById('refName').value, reference_contact: document.getElementById('refContact').value, promise_date: document.getElementById('promiseDate').value, co: document.getElementById('co').value, colony: document.getElementById('colony').value, reason: document.getElementById('reason').value, photo_data: customerPhotoData || custs[index].photo_data, bill_photo_data: billPhotoData || custs[index].bill_photo_data }; let paid = getPayments().filter(p => p.customerId === editModeId).reduce((s, p) => s + p.amount, 0); custs[index].total_paid = paid; custs[index].remaining_due = Math.max(0, custs[index].due_amount - paid); saveCustomers(custs); showToast("Customer updated"); } } else { let newId = Date.now() % 10000 + Math.floor(Math.random() * 9000); custs.push({ id: newId, name, cnic: document.getElementById('cnic').value, phone, email: document.getElementById('email').value, city, due_amount: due, total_paid: 0, remaining_due: due, entry_date: new Date().toISOString().split('T')[0], address: document.getElementById('address').value, reason: document.getElementById('reason').value, photo_data: customerPhotoData || "", bill_photo_data: billPhotoData || "", promise_date: document.getElementById('promiseDate').value, reference_name: document.getElementById('refName').value, reference_contact: document.getElementById('refContact').value, co: document.getElementById('co').value, colony: document.getElementById('colony').value }); saveCustomers(custs); showToast(`✅ ${name} added successfully`); } refreshAll(); document.getElementById('customerModal').classList.remove('active'); });
+
+        // Import/Export
+        document.getElementById('importBtn').addEventListener('click', () => { let input = document.createElement('input'); input.type = 'file'; input.accept = '.csv'; input.onchange = (e) => { let file = e.target.files[0]; let reader = new FileReader(); reader.onload = (ev) => { let rows = ev.target.result.split('\n').slice(1); let custs = getCustomers(); rows.forEach(row => { let cols = row.split(','); let name = cols[1]?.replace(/"/g, '').trim(); if (name) { custs.push({ id: Date.now() % 10000 + Math.floor(Math.random() * 9000), name, cnic: cols[2]?.replace(/"/g, ''), phone: cols[3]?.replace(/"/g, ''), email: "", city: cols[4]?.replace(/"/g, '') || "Karachi", due_amount: parseFloat(cols[6]) || 0, total_paid: 0, remaining_due: parseFloat(cols[6]) || 0, entry_date: new Date().toISOString().split('T')[0], address: "", reason: "", photo_data: "", bill_photo_data: "", promise_date: "", reference_name: "", reference_contact: "", co: "", colony: "" }); } }); saveCustomers(custs); refreshAll(); showToast("Import completed"); }; reader.readAsText(file); }; input.click(); });
+        function exportCSV(filtered) { let data = filtered ? filterCustomers() : allCustomers; if (!data.length) return showToast("No data", 'error'); let headers = ["ID", "Name", "CNIC", "Phone", "City", "Due Amount", "Paid", "Remaining", "Reference"]; let rows = data.map(c => [c.id, `"${c.name}"`, `"${c.cnic || ''}"`, `"${c.phone || ''}"`, `"${c.city || ''}"`, c.due_amount, c.total_paid, c.remaining_due, `"${c.reference_name || ''}"`]); let blob = new Blob(["\uFEFF" + headers.join(',') + "\n" + rows.map(r => r.join(',')).join('\n')], { type: "text/csv" }); let a = document.createElement('a'), url = URL.createObjectURL(blob); a.href = url; a.download = `customers_${filtered ? 'filtered' : 'all'}.csv`; a.click(); URL.revokeObjectURL(url); showToast(`Exported ${data.length} customers`); }
+        document.getElementById('exportAllBtn').onclick = () => exportCSV(false);
+        document.getElementById('exportFilteredBtn').onclick = () => exportCSV(true);
+        document.getElementById('searchInput').addEventListener('input', (e) => { currentSearch = e.target.value; refreshAll(); });
+        document.querySelectorAll('.filter-btn').forEach(btn => { btn.addEventListener('click', () => { currentFilter = btn.dataset.filter; document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); refreshAll(); }); });
+
+        // Voice Search
+        if ('webkitSpeechRecognition' in window) { let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)(); recognition.lang = 'en-PK'; document.getElementById('micBtn').addEventListener('click', () => { recognition.start(); showToast("🎤 Listening..."); }); recognition.onresult = (e) => { let transcript = e.results[0][0].transcript; document.getElementById('searchInput').value = transcript; currentSearch = transcript; refreshAll(); showToast(`Searched: ${transcript}`); }; }
+
+        // Login
+        function login(username, password) { let user = USERS[username.toLowerCase()]; if (user && user.password === password) { currentUser = { username, role: user.role, name: user.name }; document.getElementById('userRoleBadge').innerHTML = currentUser.role === 'admin' ? '👑 Admin (Full Access)' : '👤 User (Add + Receive)'; document.getElementById('openModalBtn').style.display = 'flex'; document.getElementById('loginScreen').style.display = 'none'; document.getElementById('app').style.display = 'block'; initDB(); refreshAll(); showToast(`Welcome ${currentUser.name}!`); return true; } return false; }
+        document.getElementById('loginForm').addEventListener('submit', (e) => { e.preventDefault(); if (!login(document.getElementById('username').value.trim(), document.getElementById('password').value)) { document.getElementById('errorMsg').textContent = 'Invalid credentials! Use admin/admin123 or user/user123'; document.getElementById('errorMsg').style.display = 'block'; } });
+        document.getElementById('quickAdminBtn').addEventListener('click', () => login('admin', 'admin123'));
+        document.getElementById('quickUserBtn').addEventListener('click', () => login('user', 'user123'));
+        document.getElementById('logoutBtn').addEventListener('click', () => { currentUser = null; document.getElementById('loginScreen').style.display = 'flex'; document.getElementById('app').style.display = 'none'; });
+    </script>
 </body>
 </html>
