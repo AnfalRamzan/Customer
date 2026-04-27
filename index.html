@@ -3,489 +3,1396 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>Pakistan Due Manager | Premium Collection System</title>
+    <title>FinCollect Pro | Premium Due Management with MySQL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
-            background: linear-gradient(145deg, #f0f4f8 0%, #e2e8f0 100%);
+            background: #f0f4f9;
             min-height: 100vh;
         }
 
-        /* ========== LOGIN SCREEN ========== */
+        /* ========== ELEGANT LOGIN SCREEN ========== */
         .login-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(145deg, #0b1120 0%, #111827 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 2000;
         }
 
-        .login-container {
+        .login-card {
             background: rgba(255,255,255,0.98);
-            backdrop-filter: blur(10px);
-            border-radius: 48px;
-            padding: 40px;
+            backdrop-filter: blur(2px);
+            border-radius: 56px;
+            padding: 48px 44px;
             width: 100%;
-            max-width: 460px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
-            animation: slideUp 0.5s ease;
+            max-width: 500px;
+            box-shadow: 0 35px 65px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
+        .login-brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .logo-circle {
+            width: 85px;
+            height: 85px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 12px 25px -8px rgba(0,0,0,0.2);
+        }
+        .logo-circle i {
+            font-size: 42px;
+            color: white;
+        }
+        .login-brand h2 {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+        }
+        .login-brand p {
+            color: #5b6e8c;
+            font-size: 0.85rem;
+            margin-top: 6px;
+            font-weight: 500;
         }
 
-        .login-header { text-align: center; margin-bottom: 30px; }
-        .login-header i { font-size: 65px; background: linear-gradient(135deg, #1e3c72, #2a5298); background-clip: text; -webkit-background-clip: text; color: transparent; }
-        .login-header h1 { font-size: 1.8rem; color: #1a1a2e; margin-top: 12px; }
-        .login-header p { color: #666; font-size: 0.9rem; }
+        .input-group {
+            margin-bottom: 22px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 15px 18px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 34px;
+            font-size: 0.95rem;
+            background: #ffffff;
+            transition: all 0.2s;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #0f172a;
+            box-shadow: 0 0 0 3px rgba(15,23,42,0.08);
+        }
 
-        .form-group { margin-bottom: 18px; }
-        .form-group input { width: 100%; padding: 14px 18px; border: 2px solid #e2e8f0; border-radius: 28px; font-size: 1rem; transition: all 0.3s; }
-        .form-group input:focus { outline: none; border-color: #1e3c72; box-shadow: 0 0 0 3px rgba(30,60,114,0.1); }
+        .login-button {
+            width: 100%;
+            background: linear-gradient(95deg, #0f172a, #1e293b);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 44px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 8px 20px -6px rgba(0,0,0,0.2);
+        }
+        .login-button:hover {
+            background: linear-gradient(95deg, #1e293b, #0f172a);
+            transform: translateY(-2px);
+        }
 
-        .login-btn { width: 100%; background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; border: none; padding: 14px; border-radius: 28px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform 0.2s; }
-        .login-btn:active { transform: scale(0.97); }
-
-        .error-msg { background: #fee; color: #dc3545; padding: 12px; border-radius: 20px; margin-bottom: 20px; display: none; text-align: center; font-size: 0.85rem; }
-
-        .role-cards { display: flex; gap: 15px; margin-bottom: 25px; }
-        .role-card { flex: 1; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 24px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.3s; }
-        .role-card:hover { transform: translateY(-3px); }
-        .role-card.selected { border-color: #1e3c72; background: linear-gradient(135deg, #e8eaf6, #fff); }
-        .role-card.admin.selected { border-color: #dc3545; }
-        .role-card.user.selected { border-color: #28a745; }
-        .role-icon { font-size: 42px; margin-bottom: 8px; }
-        .role-card.admin .role-icon { color: #dc3545; }
-        .role-card.user .role-icon { color: #28a745; }
-        .role-name { font-weight: 800; font-size: 1rem; }
-        .role-desc { font-size: 0.7rem; color: #666; }
-
-        .quick-buttons { display: flex; gap: 12px; margin-top: 18px; }
-        .quick-btn { flex: 1; padding: 12px; border: none; border-radius: 28px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
-        .quick-btn.admin-quick { background: linear-gradient(135deg, #dc3545, #c82333); color: white; }
-        .quick-btn.user-quick { background: linear-gradient(135deg, #28a745, #20c997); color: white; }
+        .role-switch {
+            display: flex;
+            gap: 14px;
+            margin: 28px 0 16px;
+            background: #f1f5f9;
+            padding: 5px;
+            border-radius: 60px;
+        }
+        .role-tab {
+            flex: 1;
+            text-align: center;
+            padding: 11px 8px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #475569;
+        }
+        .role-tab.active {
+            background: white;
+            color: #0f172a;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .error-message {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 28px;
+            margin-bottom: 18px;
+            display: none;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
 
         /* ========== MAIN APP ========== */
-        .app { max-width: 1600px; margin: 0 auto; padding: 20px; display: none; }
+        .app-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 24px 28px;
+            display: none;
+        }
 
-        /* Modern Header */
-        .app-header {
+        /* premium header */
+        .premium-header {
             background: white;
-            border-radius: 40px;
-            padding: 18px 32px;
+            border-radius: 32px;
+            padding: 14px 28px;
             margin-bottom: 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 16px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            gap: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            border: 1px solid #eef2ff;
         }
-
-        .logo { display: flex; align-items: center; gap: 12px; }
-        .logo i { font-size: 36px; background: linear-gradient(135deg, #1e3c72, #2a5298); background-clip: text; -webkit-background-clip: text; color: transparent; }
-        .logo h1 { font-size: 1.6rem; font-weight: 800; background: linear-gradient(135deg, #1e3c72, #2a5298); background-clip: text; -webkit-background-clip: text; color: transparent; }
-        .pkr-badge { background: #10b981; color: white; font-size: 0.7rem; padding: 4px 12px; border-radius: 40px; margin-left: 8px; }
-
-        .header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-        .role-badge { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 8px 20px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; }
-        .logout-btn { background: #ef4444; border: none; color: white; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-weight: 600; transition: 0.2s; }
-        .logout-btn:hover { background: #dc2626; transform: scale(0.98); }
-        .tool-btn { background: white; border: 1.5px solid #e2e8f0; padding: 8px 22px; border-radius: 40px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
-        .tool-btn:hover { background: #f8fafc; border-color: #94a3b8; }
-
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 24px;
-            margin-bottom: 28px;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 32px;
-            padding: 24px 28px;
+        .brand {
             display: flex;
             align-items: center;
-            gap: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-            transition: all 0.3s;
-            border: 1px solid rgba(0,0,0,0.03);
+            gap: 14px;
         }
-        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.05); }
-
-        .stat-icon { width: 65px; height: 65px; background: linear-gradient(145deg, #eef2ff, #e0e7ff); border-radius: 30px; display: flex; align-items: center; justify-content: center; }
-        .stat-icon i { font-size: 32px; color: #1e3c72; }
-        .stat-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; }
-        .stat-value { font-size: 2rem; font-weight: 800; color: #0f172a; line-height: 1.2; }
-
-        /* Search & Filter */
-        .search-section {
-            background: white;
+        .brand-icon {
+            background: #0f172a;
+            width: 48px;
+            height: 48px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .brand h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+        .pkr-tag {
+            background: #eef2ff;
+            color: #1e3a8a;
+            font-size: 0.65rem;
+            padding: 4px 12px;
+            border-radius: 30px;
+            margin-left: 8px;
+        }
+        .db-status {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+        .db-online {
+            background: #10b981;
+            color: white;
+        }
+        .db-offline {
+            background: #f59e0b;
+            color: white;
+        }
+        .header-tools {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .role-indicator {
+            background: #f1f5f9;
+            padding: 8px 20px;
             border-radius: 40px;
-            padding: 20px 28px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        .tool-icon {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .sync-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+        }
+        .sync-btn:hover {
+            background: #059669;
+        }
+        .logout-icon {
+            background: none;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+        }
+
+        /* Stats */
+        .stat-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 22px;
+            margin-bottom: 28px;
+        }
+        .stat-item {
+            background: white;
+            border-radius: 28px;
+            padding: 22px 26px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border: 1px solid #edf2f7;
+        }
+        .stat-icon-bg {
+            width: 58px;
+            height: 58px;
+            background: #f8fafc;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* search  */
+        .search-bar-area {
+            background: white;
+            border-radius: 32px;
+            padding: 16px 24px;
             margin-bottom: 28px;
             display: flex;
             gap: 18px;
             flex-wrap: wrap;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            border: 1px solid #edf2f7;
+        }
+        .search-flex {
+            flex: 2;
+            position: relative;
+        }
+        .search-flex i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+        .search-flex input {
+            width: 100%;
+            padding: 14px 20px 14px 52px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 60px;
+            font-size: 0.9rem;
+        }
+        .mic-search-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #f1f5f9;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: #0f172a;
+            transition: 0.2s;
+        }
+        .filter-group {
+            display: flex;
+            gap: 12px;
+        }
+        .filter-chip {
+            padding: 8px 28px;
+            border-radius: 60px;
+            background: #f1f5f9;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .filter-chip.active {
+            background: #0f172a;
+            color: white;
+        }
+        .add-customer {
+            background: #0f172a;
+            color: white;
+            padding: 10px 28px;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
         }
 
-        .search-box { flex: 2; min-width: 260px; position: relative; }
-        .search-box i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
-        .search-box input { width: 100%; padding: 14px 18px 14px 48px; border: 2px solid #e2e8f0; border-radius: 60px; font-size: 0.95rem; transition: 0.2s; }
-        .search-box input:focus { outline: none; border-color: #1e3c72; box-shadow: 0 0 0 3px rgba(30,60,114,0.1); }
-
-        .mic-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: #f1f5f9; border: none; border-radius: 50%; width: 38px; height: 38px; cursor: pointer; font-size: 1rem; color: #1e3c72; transition: 0.2s; }
-        .mic-btn:hover { background: #e2e8f0; }
-
-        .filter-group { display: flex; gap: 12px; flex-wrap: wrap; }
-        .filter-btn { padding: 10px 28px; border: none; background: #f1f5f9; border-radius: 60px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .filter-btn.active { background: #1e3c72; color: white; box-shadow: 0 4px 12px rgba(30,60,114,0.2); }
-
-        .add-customer-btn { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; border: none; padding: 12px 32px; border-radius: 60px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
-        .add-customer-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 20px rgba(0,0,0,0.1); }
-
-        /* Layout */
-        .dashboard-layout { display: flex; gap: 28px; flex-wrap: wrap; }
-        .list-view { flex: 2.5; min-width: 280px; }
-        .side-panels { flex: 1.2; min-width: 280px; display: flex; flex-direction: column; gap: 28px; }
-
-        /* Table */
-        .table-container { background: white; border-radius: 32px; overflow-x: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.02); border: 1px solid #edf2f7; }
-        .customers-table { width: 100%; border-collapse: collapse; min-width: 1050px; }
-        .customers-table th { padding: 20px 16px; text-align: left; font-weight: 800; color: #334155; background: #fafcff; border-bottom: 2px solid #eef2ff; }
-        .customers-table td { padding: 16px; border-bottom: 1px solid #f0f2f5; vertical-align: middle; }
-        .customers-table tbody tr { cursor: pointer; transition: 0.15s; }
-        .customers-table tbody tr:hover { background: #f8fafd; }
-        .due-row { border-left: 4px solid #ef4444; background: #fffafb; }
-
-        .photo-circle { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 3px solid #1e3c72; cursor: pointer; transition: 0.2s; }
-        .photo-circle:hover { transform: scale(1.05); border-color: #10b981; }
-
-        .action-buttons { display: flex; gap: 8px; }
-        .action-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; padding: 8px 12px; border-radius: 40px; transition: 0.1s; }
-        .receive-action { color: #10b981; }
-        .receive-action:hover { background: #d1fae5; }
-        .edit-action { color: #f59e0b; }
-        .edit-action:hover { background: #fed7aa; }
-        .delete-action { color: #ef4444; }
-        .delete-action:hover { background: #fee2e2; }
-
-        /* Panels */
-        .reminder-panel, .collection-panel { background: white; border-radius: 32px; overflow: hidden; border: 1px solid #edf2f7; }
-        .reminder-header { background: linear-gradient(115deg, #f97316, #ef4444); padding: 18px 22px; color: white; display: flex; justify-content: space-between; align-items: center; }
-        .collection-header { background: linear-gradient(115deg, #10b981, #059669); padding: 18px 22px; color: white; display: flex; justify-content: space-between; }
-        .reminder-list, .collection-list { max-height: 340px; overflow-y: auto; }
-        .reminder-item, .collection-item { padding: 14px 18px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 12px; }
-        .reminder-icon { width: 38px; height: 38px; background: #fff1f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #dc2626; }
-        .empty-placeholder { text-align: center; padding: 45px; color: #94a3b8; font-size: 0.9rem; }
-
-        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 14px 32px; border-radius: 60px; z-index: 2100; font-weight: 500; backdrop-filter: blur(8px); display: none; }
-
-        /* Modal */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); z-index: 3000; display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: 0.2s; }
-        .modal-overlay.active { visibility: visible; opacity: 1; }
-        .customer-form-modal { background: white; max-width: 750px; width: 92%; max-height: 85vh; overflow-y: auto; border-radius: 48px; padding: 32px 36px; }
-        .form-title { font-size: 1.7rem; font-weight: 800; margin-bottom: 24px; color: #1e3c72; display: flex; align-items: center; gap: 12px; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-        .full-width { grid-column: span 2; }
-        .input-field { display: flex; flex-direction: column; gap: 6px; }
-        .input-field label { font-weight: 800; font-size: 0.7rem; text-transform: uppercase; color: #475569; letter-spacing: 0.5px; }
-        .input-field input, .input-field select { padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 28px; font-size: 0.9rem; transition: 0.2s; }
-        .input-field input:focus { outline: none; border-color: #1e3c72; }
-
-        .image-upload-section { background: #f8fafc; border-radius: 28px; padding: 16px; margin-top: 12px; }
-        .upload-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .remove-img-btn { background: #fee2e2; border: none; color: #dc2626; padding: 5px 14px; border-radius: 30px; cursor: pointer; font-size: 0.7rem; font-weight: 700; }
-        .customer-circle-preview { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #1e3c72; margin: 0 auto 12px; display: block; }
-        .bill-preview { width: 80px; height: 80px; border-radius: 16px; object-fit: cover; border: 2px solid #cbd5e1; cursor: pointer; margin: 0 auto; }
-        .upload-btn { background: #e2e8f0; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-size: 0.75rem; font-weight: 700; width: 100%; margin-top: 8px; transition: 0.2s; }
-        .upload-btn:hover { background: #cbd5e1; }
-
-        .form-actions { display: flex; justify-content: flex-end; gap: 14px; margin-top: 28px; }
-        .btn-cancel { background: #f1f5f9; border: none; padding: 12px 28px; border-radius: 40px; font-weight: 700; cursor: pointer; }
-        .btn-submit { background: linear-gradient(135deg, #1e3c72, #2a5298); border: none; padding: 12px 32px; border-radius: 40px; color: white; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .btn-submit:hover { transform: scale(0.98); }
-
-        .zoom-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 4000; display: flex; align-items: center; justify-content: center; visibility: hidden; cursor: zoom-out; }
-        .zoom-modal.active { visibility: visible; }
-        .zoom-img { max-width: 90%; max-height: 90%; border-radius: 28px; }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .app { padding: 12px; }
-            .app-header { padding: 15px 20px; }
-            .logo h1 { font-size: 1.2rem; }
-            .stats-grid { gap: 15px; }
-            .stat-card { padding: 16px 18px; }
-            .stat-value { font-size: 1.4rem; }
-            .search-section { padding: 15px 20px; }
-            .filter-btn { padding: 8px 18px; font-size: 0.8rem; }
-            .add-customer-btn { padding: 10px 20px; font-size: 0.85rem; }
-            .form-grid { grid-template-columns: 1fr; }
-            .full-width { grid-column: span 1; }
-            .customer-form-modal { padding: 20px; }
-            .role-cards { flex-direction: column; }
-            .quick-buttons { flex-direction: column; }
-            .header-right { width: 100%; justify-content: center; }
+        /* table + panels */
+        .two-column {
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+        }
+        .data-table-wrap {
+            flex: 2.5;
+            background: white;
+            border-radius: 28px;
+            overflow-x: auto;
+            border: 1px solid #edf2f7;
+        }
+        .modern-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+        .modern-table th {
+            padding: 18px 16px;
+            text-align: left;
+            background: #fafcff;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .modern-table td {
+            padding: 15px 16px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .due-highlight {
+            border-left: 3px solid #dc2626;
+        }
+        .photo-round {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+        .action-group {
+            display: flex;
+            gap: 10px;
+        }
+        .action-badge {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 30px;
         }
 
-        @media (max-width: 480px) {
-            .stat-card { flex-direction: column; text-align: center; }
-            .stat-icon { margin: 0 auto; }
+        .right-panels {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .info-card {
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid #edf2f7;
+        }
+        .card-header {
+            padding: 18px 22px;
+            font-weight: 800;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        /* modal with close cross */
+        .modal-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        .modal-mask.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-content {
+            background: white;
+            width: 92%;
+            max-width: 780px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border-radius: 40px;
+            position: relative;
+            padding: 32px 38px;
+        }
+        .modal-close-x {
+            position: absolute;
+            top: 24px;
+            right: 28px;
+            background: #f1f5f9;
+            width: 38px;
+            height: 38px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            border: none;
+            transition: 0.2s;
+        }
+        .toast-message {
+            position: fixed;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 60px;
+            z-index: 4000;
+            display: none;
+            font-weight: 500;
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @media (max-width: 700px) {
+            .app-container { padding: 16px; }
+            .modal-content { padding: 24px; }
         }
     </style>
 </head>
 <body>
-    <!-- LOGIN SCREEN -->
-    <div class="login-screen" id="loginScreen">
-        <div class="login-container">
-            <div class="login-header">
-                <i class="fas fa-hand-holding-usd"></i>
-                <h1>Customer Due Manager</h1>
-                <p>Pakistan - Payment Collection System</p>
-            </div>
-            <div id="errorMsg" class="error-msg"></div>
-            <div class="role-cards">
-                <div class="role-card admin" data-role="admin" data-username="admin" data-password="admin123">
-                    <div class="role-icon"><i class="fas fa-crown"></i></div>
-                    <div class="role-name">Administrator</div>
-                    <div class="role-desc">Full Access • Add/Edit/Delete</div>
-                </div>
-                <div class="role-card user" data-role="user" data-username="user" data-password="user123">
-                    <div class="role-icon"><i class="fas fa-user-check"></i></div>
-                    <div class="role-name">Payment Receiver</div>
-                    <div class="role-desc">Add Customer • Receive Payment</div>
-                </div>
-            </div>
-            <form id="loginForm">
-                <div class="form-group"><input type="text" id="username" placeholder="Username" autocomplete="off"></div>
-                <div class="form-group"><input type="password" id="password" placeholder="Password"></div>
-                <button type="submit" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</button>
-            </form>
-            <div class="quick-buttons">
-                <button type="button" class="quick-btn admin-quick" id="quickAdminBtn"><i class="fas fa-crown"></i> Admin Login</button>
-                <button type="button" class="quick-btn user-quick" id="quickUserBtn"><i class="fas fa-user-check"></i> User Login</button>
-            </div>
+
+<!-- LOGIN SECTION -->
+<div class="login-screen" id="loginScreen">
+    <div class="login-card">
+        <div class="login-brand">
+            <div class="logo-circle"><i class="fas fa-database"></i></div>
+            <h2>FinCollect Pro</h2>
+            <p>MySQL Enterprise Due Management</p>
+        </div>
+        <div id="loginError" class="error-message"></div>
+        <div class="role-switch">
+            <div class="role-tab active" data-role="admin" data-user="admin" data-pass="admin123">Administrator</div>
+            <div class="role-tab" data-role="user" data-user="user" data-pass="user123">Collection Officer</div>
+        </div>
+        <form id="smartLoginForm">
+            <div class="input-group"><label>USERNAME</label><input type="text" id="loginUsername" placeholder="Enter username" autocomplete="off"></div>
+            <div class="input-group"><label>PASSWORD</label><input type="password" id="loginPassword" placeholder="••••••"></div>
+            <button type="submit" class="login-button"><i class="fas fa-arrow-right-to-bracket"></i> SIGN IN</button>
+        </form>
+    </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app-container" id="mainApp">
+    <div class="premium-header">
+        <div class="brand">
+            <div class="brand-icon"><i class="fas fa-coins"></i></div>
+            <h1>Due Manager <span class="pkr-tag">PKR</span><span id="dbStatusIndicator" class="db-status db-offline">LOCAL MODE</span></h1>
+        </div>
+        <div class="header-tools">
+            <span class="role-indicator" id="userRoleSpan">Admin</span>
+            <button class="tool-icon sync-btn" id="syncDatabaseBtn"><i class="fas fa-sync-alt"></i> Sync DB</button>
+            <button class="tool-icon" id="importCsvBtn"><i class="fas fa-upload"></i> Import</button>
+            <button class="tool-icon" id="exportFullBtn"><i class="fas fa-download"></i> Export All</button>
+            <button class="tool-icon" id="exportFilteredBtn"><i class="fas fa-filter"></i> Filtered</button>
+            <button class="tool-icon logout-icon" id="logoutGlobalBtn"><i class="fas fa-sign-out-alt"></i> Exit</button>
         </div>
     </div>
 
-    <!-- MAIN APP -->
-    <div class="app" id="app">
-        <div class="app-header">
-            <div class="logo"><i class="fas fa-landmark"></i><h1>Due Manager <span class="pkr-badge">PKR</span></h1></div>
-            <div class="header-right">
-                <span class="role-badge" id="userRoleBadge">Admin</span>
-                <button class="tool-btn" id="importBtn"><i class="fas fa-upload"></i> Import</button>
-                <button class="tool-btn" id="exportAllBtn"><i class="fas fa-download"></i> Export</button>
-                <button class="tool-btn" id="exportFilteredBtn"><i class="fas fa-filter"></i> Filtered</button>
-                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-            </div>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div><div class="stat-label">Total Customers</div><div class="stat-value" id="totalCustomers">0</div></div></div>
-            <div class="stat-card"><div class="stat-icon"><i class="fas fa-rupee-sign"></i></div><div><div class="stat-label">Total Due</div><div class="stat-value" id="totalAmount">PKR 0</div></div></div>
-            <div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div><div class="stat-label">Remaining Due</div><div class="stat-value" id="totalDue">PKR 0</div></div></div>
-        </div>
-
-        <div class="search-section">
-            <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search by name, CNIC, city, phone..."><button class="mic-btn" id="micBtn"><i class="fas fa-microphone"></i></button></div>
-            <div class="filter-group">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="due">Has Due</button>
-                <button class="filter-btn" data-filter="cleared">Cleared</button>
-            </div>
-            <button class="add-customer-btn" id="openModalBtn"><i class="fas fa-plus-circle"></i> Add Customer</button>
-        </div>
-
-        <div class="dashboard-layout">
-            <div class="list-view"><div class="table-container"><table class="customers-table"><thead><tr><th>Photo</th><th>ID</th><th>Name</th><th>CNIC</th><th>City</th><th>Reference</th><th>Due</th><th>Actions</th></tr></thead><tbody id="customersList"></tbody></table></div></div>
-            <div class="side-panels">
-                <div class="reminder-panel"><div class="reminder-header"><h3><i class="fas fa-bell"></i> Reminders</h3><span id="reminderCount">0</span></div><div id="reminderList" class="reminder-list"></div></div>
-                <div class="collection-panel"><div class="collection-header"><h3><i class="fas fa-money-bill-wave"></i> Today's Collection</h3><span id="todayTotal">PKR 0</span></div><div id="collectionList" class="collection-list"></div></div>
-            </div>
-        </div>
+    <div class="stat-cards">
+        <div class="stat-item"><div class="stat-icon-bg"><i class="fas fa-users fa-xl"></i></div><div><div class="stat-label" style="font-size:0.7rem; font-weight:800;">TOTAL CUSTOMERS</div><div class="stat-value" id="totalCustomerCount" style="font-size:1.9rem; font-weight:800;">0</div></div></div>
+        <div class="stat-item"><div class="stat-icon-bg"><i class="fas fa-rupee-sign"></i></div><div><div class="stat-label">ORIGINAL DUE</div><div class="stat-value" id="totalOriginalDue">PKR 0</div></div></div>
+        <div class="stat-item"><div class="stat-icon-bg"><i class="fas fa-hourglass-half"></i></div><div><div class="stat-label">REMAINING DUE</div><div class="stat-value" id="totalRemainingDueVal">PKR 0</div></div></div>
     </div>
 
-    <!-- ADD CUSTOMER MODAL -->
-    <div id="customerModal" class="modal-overlay">
-        <div class="customer-form-modal">
-            <div class="form-title"><i class="fas fa-user-plus"></i> Add New Customer</div>
-            <form id="customerForm">
-                <div class="form-grid">
-                    <div class="input-field full-width"><label>Full Name *</label><input type="text" id="fullName" required></div>
-                    <div class="input-field"><label>CNIC</label><input type="text" id="cnic" placeholder="42201-1234567-8"></div>
-                    <div class="input-field"><label>Phone *</label><input type="text" id="phone" required></div>
-                    <div class="input-field"><label>Email</label><input type="email" id="email"></div>
-                    <div class="input-field"><label>City *</label><input type="text" id="city" required></div>
-                    <div class="input-field"><label>Due Amount (PKR)</label><input type="number" id="dueAmount" value="0"></div>
-                    <div class="input-field"><label>Address</label><input type="text" id="address"></div>
-                    <div class="input-field"><label>Reference Name</label><input type="text" id="refName"></div>
-                    <div class="input-field"><label>Reference Contact</label><input type="text" id="refContact"></div>
-                    <div class="input-field"><label>Promise Date</label><input type="date" id="promiseDate"></div>
-                    <div class="input-field"><label>CO / Business</label><input type="text" id="co"></div>
-                    <div class="input-field"><label>Colony</label><input type="text" id="colony"></div>
-                    <div class="input-field full-width"><label>Reason</label><input type="text" id="reason"></div>
-                </div>
-
-                <div class="image-upload-section">
-                    <div class="upload-header"><h4><i class="fas fa-camera"></i> Customer Photo</h4><button type="button" class="remove-img-btn" id="removeCustomerPhotoBtn"><i class="fas fa-trash"></i> Remove</button></div>
-                    <div id="customerPhotoPreview" style="text-align:center;"><i class="fas fa-user-circle" style="font-size: 80px; color: #cbd5e1;"></i></div>
-                    <input type="file" id="customerPhotoInput" accept="image/*" style="display:none">
-                    <button type="button" class="upload-btn" id="uploadCustomerPhotoBtn"><i class="fas fa-cloud-upload-alt"></i> Upload Photo</button>
-                </div>
-
-                <div class="image-upload-section">
-                    <div class="upload-header"><h4><i class="fas fa-file-invoice"></i> Bill Photo</h4><button type="button" class="remove-img-btn" id="removeBillPhotoBtn"><i class="fas fa-trash"></i> Remove</button></div>
-                    <div id="billPhotoPreview" style="text-align:center;"><i class="fas fa-file-image" style="font-size: 60px; color: #cbd5e1;"></i></div>
-                    <input type="file" id="billPhotoInput" accept="image/*" style="display:none">
-                    <button type="button" class="upload-btn" id="uploadBillPhotoBtn"><i class="fas fa-cloud-upload-alt"></i> Upload Bill</button>
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" class="btn-cancel" id="closeModalBtn">Cancel</button>
-                    <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Save Customer</button>
-                </div>
-            </form>
+    <div class="search-bar-area">
+        <div class="search-flex">
+            <i class="fas fa-search"></i>
+            <input type="text" id="globalSearchInput" placeholder="Search by name, CNIC, city, phone, reference...">
+            <button class="mic-search-btn" id="voiceMicBtn"><i class="fas fa-microphone"></i></button>
         </div>
+        <div class="filter-group">
+            <button class="filter-chip active" data-filter="all">All</button>
+            <button class="filter-chip" data-filter="due">Pending Due</button>
+            <button class="filter-chip" data-filter="cleared">Cleared</button>
+        </div>
+        <button class="add-customer" id="openAddCustomerModal"><i class="fas fa-plus-circle"></i> Add Customer</button>
     </div>
 
-    <div id="zoomModal" class="zoom-modal"><img id="zoomImg" class="zoom-img"></div>
-    <div id="toast" class="toast"></div>
+    <div class="two-column">
+        <div class="data-table-wrap">
+            <table class="modern-table">
+                <thead>
+                    <tr><th>Photo</th><th>ID</th><th>Name</th><th>CNIC</th><th>City</th><th>Reference</th><th>Due (PKR)</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="customersTbody"></tbody>
+            </table>
+        </div>
+        <div class="right-panels">
+            <div class="info-card"><div class="card-header"><span><i class="fas fa-bell"></i> Overdue Alerts</span><span id="reminderCountSpan">0</span></div><div id="reminderListArea" class="reminder-list" style="max-height:280px; overflow:auto;"></div></div>
+            <div class="info-card"><div class="card-header"><span><i class="fas fa-wallet"></i> Today's Collection</span><span id="todayCollectionSpan">PKR 0</span></div><div id="collectionListArea" style="max-height:280px; overflow:auto;"></div></div>
+        </div>
+    </div>
+</div>
 
-    <script>
-        // HARDCODED CREDENTIALS
-        const USERS = { admin: { password: "admin123", role: "admin", name: "Administrator" }, user: { password: "user123", role: "user", name: "Payment Receiver" } };
-        const STORAGE = { CUSTOMERS: 'due_customers_final', PAYMENTS: 'due_payments_final' };
+<!-- MODAL WITH CROSS ICON -->
+<div id="customerFormModal" class="modal-mask">
+    <div class="modal-content">
+        <button class="modal-close-x" id="closeModalCrossBtn"><i class="fas fa-times"></i></button>
+        <h3 style="margin-bottom: 24px; font-size: 1.5rem;"><i class="fas fa-user-plus"></i> Customer Details</h3>
+        <form id="customerDynamicForm">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px;">
+                <div class="full-width" style="grid-column:span 2;"><label>Full Name *</label><input type="text" id="fullNameField" required style="width:100%; padding:12px; border-radius:24px;"></div>
+                <div><label>CNIC</label><input type="text" id="cnicField"></div><div><label>Phone *</label><input type="text" id="phoneField" required></div>
+                <div><label>Email</label><input type="email" id="emailField"></div><div><label>City *</label><input type="text" id="cityField" required></div>
+                <div><label>Due Amount</label><input type="number" id="dueField" value="0"></div><div><label>Address</label><input type="text" id="addressField"></div>
+                <div><label>Reference Name</label><input type="text" id="refNameField"></div><div><label>Reference Contact</label><input type="text" id="refContactField"></div>
+                <div><label>Promise Date</label><input type="date" id="promiseDateField"></div><div><label>Business/CO</label><input type="text" id="coField"></div>
+                <div><label>Colony</label><input type="text" id="colonyField"></div><div class="full-width" style="grid-column:span 2;"><label>Reason</label><input type="text" id="reasonField"></div>
+            </div>
+            <div style="background:#fafcff; border-radius:24px; padding:16px; margin-top:20px;">
+                <div style="display:flex; justify-content:space-between;"><span>Customer Photo</span><button type="button" id="removePhotoModalBtn" style="background:#fee2e2; border:none; padding:4px 14px; border-radius:40px;">Remove</button></div>
+                <div id="photoPreviewModal" style="text-align:center; margin:10px;"><i class="fas fa-user-circle fa-4x" style="color:#cbd5e1;"></i></div>
+                <input type="file" id="photoFileModal" accept="image/*" style="display:none"><button type="button" id="uploadPhotoModalBtn" style="background:#eef2ff; border:none; padding:8px; width:100%; border-radius:50px;">Upload Photo</button>
+            </div>
+            <div style="background:#fafcff; border-radius:24px; padding:16px; margin-top:14px;">
+                <div style="display:flex; justify-content:space-between;"><span>Bill/Document</span><button type="button" id="removeBillModalBtn" style="background:#fee2e2; border:none; padding:4px 14px; border-radius:40px;">Remove</button></div>
+                <div id="billPreviewModal" style="text-align:center; margin:10px;"><i class="fas fa-file-invoice fa-3x" style="color:#cbd5e1;"></i></div>
+                <input type="file" id="billFileModal" accept="image/*" style="display:none"><button type="button" id="uploadBillModalBtn" style="background:#eef2ff; border:none; padding:8px; width:100%; border-radius:50px;">Upload Bill</button>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:14px; margin-top:28px;"><button type="button" id="cancelModalBtn" class="tool-icon">Cancel</button><button type="submit" class="login-button" style="width:auto; padding:10px 32px;">Save Customer</button></div>
+        </form>
+    </div>
+</div>
+
+<div id="zoomImageModal" class="modal-mask" style="background:rgba(0,0,0,0.9); z-index:5000;"><img id="zoomPreviewImage" style="max-width:90%; max-height:90%; border-radius:28px;"></div>
+<div id="globalToastMsg" class="toast-message"></div>
+
+<script>
+    // Configuration
+    const API_BASE_URL = 'http://localhost:3000/api';
+    
+    // Hardcoded users (保持不变)
+    const USER_CRED = { 
+        admin: { password: "admin123", role: "admin", label: "Admin" }, 
+        user: { password: "user123", role: "user", label: "Collection Officer" } 
+    };
+    
+    const CUST_STORAGE = "premium_customers_v2";
+    const PAY_STORAGE = "premium_payments_v2";
+    
+    let currentSession = null, allCustomers = [], currentFilter = "all", currentSearchText = "";
+    let editModeId = null, tempPhoto = "", tempBill = "";
+    let isDbConnected = false;
+    
+    // Helper Functions
+    function showToast(msg, isErr = false) { 
+        let t = document.getElementById("globalToastMsg"); 
+        t.textContent = msg; 
+        t.style.backgroundColor = isErr ? "#dc2626" : "#0f172a"; 
+        t.style.display = "block"; 
+        setTimeout(() => t.style.display = "none", 2700); 
+    }
+    
+    function formatPKR(val) { 
+        return "PKR " + new Intl.NumberFormat('en-PK').format(val || 0); 
+    }
+    
+    function escapeHtml(str) { 
+        if(!str) return ""; 
+        return String(str).replace(/[&<>]/g, m => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;" }[m])); 
+    }
+    
+    // Database API Calls
+    async function apiCall(endpoint, options = {}) {
+        try {
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                }
+            });
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('API Error:', error);
+            return { success: false, error: error.message };
+        }
+    }
+    
+    // Fetch customers from database
+    async function fetchCustomersFromDB() {
+        const result = await apiCall('/customers');
+        if (result.success && result.data) {
+            // Convert database format to frontend format
+            return result.data.map(c => ({
+                id: c.id,
+                name: c.name,
+                cnic: c.cnic || '',
+                phone: c.phone,
+                email: c.email || '',
+                city: c.city,
+                dueAmount: parseFloat(c.due_amount),
+                totalPaid: parseFloat(c.total_paid),
+                remainingDue: parseFloat(c.remaining_due),
+                address: c.address || '',
+                referenceName: c.reference_name || '',
+                referenceContact: c.reference_contact || '',
+                promiseDate: c.promise_date || '',
+                co: c.business_co || '',
+                colony: c.colony || '',
+                reason: c.reason || '',
+                photoData: c.photo_data || '',
+                billPhotoData: c.bill_photo_data || '',
+                entryDate: c.entry_date
+            }));
+        }
+        return null;
+    }
+    
+    // Add customer to database
+    async function addCustomerToDB(customerData) {
+        const result = await apiCall('/customers', {
+            method: 'POST',
+            body: JSON.stringify(customerData)
+        });
+        return result;
+    }
+    
+    // Update customer in database
+    async function updateCustomerInDB(id, customerData) {
+        const result = await apiCall(`/customers/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(customerData)
+        });
+        return result;
+    }
+    
+    // Delete customer from database
+    async function deleteCustomerFromDB(id) {
+        const result = await apiCall(`/customers/${id}`, {
+            method: 'DELETE'
+        });
+        return result;
+    }
+    
+    // Add payment to database
+    async function addPaymentToDB(paymentData) {
+        const result = await apiCall('/payments', {
+            method: 'POST',
+            body: JSON.stringify(paymentData)
+        });
+        return result;
+    }
+    
+    // Fetch dashboard stats
+    async function fetchDashboardStats() {
+        const result = await apiCall('/dashboard/stats');
+        if (result.success) {
+            return result.data;
+        }
+        return null;
+    }
+    
+    // Fetch overdue reminders
+    async function fetchOverdueReminders() {
+        const result = await apiCall('/reminders/overdue');
+        if (result.success) {
+            return result.data;
+        }
+        return [];
+    }
+    
+    // Fetch today's payments
+    async function fetchTodayPayments() {
+        const today = new Date().toISOString().slice(0,10);
+        const result = await apiCall(`/payments?date=${today}`);
+        if (result.success) {
+            return result.data;
+        }
+        return [];
+    }
+    
+    // Local Storage Functions (Backup)
+    function loadCustomersFromLocal() { 
+        return JSON.parse(localStorage.getItem(CUST_STORAGE) || "[]"); 
+    }
+    
+    function saveCustomersToLocal(arr) { 
+        localStorage.setItem(CUST_STORAGE, JSON.stringify(arr)); 
+    }
+    
+    function loadPaymentsFromLocal() { 
+        return JSON.parse(localStorage.getItem(PAY_STORAGE) || "[]"); 
+    }
+    
+    function savePaymentsToLocal(arr) { 
+        localStorage.setItem(PAY_STORAGE, JSON.stringify(arr)); 
+    }
+    
+    // Sync local data with database
+    async function syncLocalToDatabase() {
+        if (!isDbConnected) {
+            showToast("Database not connected", true);
+            return false;
+        }
         
-        let currentUser = null, allCustomers = [], currentFilter = 'all', currentSearch = '', editModeId = null;
-        let customerPhotoData = null, billPhotoData = null;
-
-        function showToast(msg, type = 'success') { let t = document.getElementById('toast'); t.textContent = msg; t.style.backgroundColor = type === 'success' ? '#10b981' : '#ef4444'; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 2800); }
-        function formatPKR(amt) { return 'PKR ' + new Intl.NumberFormat('en-PK').format(amt || 0); }
-        function escapeHtml(s) { if (!s) return ''; return String(s).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
-        function getCustomers() { return JSON.parse(localStorage.getItem(STORAGE.CUSTOMERS)) || []; }
-        function saveCustomers(c) { localStorage.setItem(STORAGE.CUSTOMERS, JSON.stringify(c)); }
-        function getPayments() { return JSON.parse(localStorage.getItem(STORAGE.PAYMENTS)) || []; }
-        function savePayments(p) { localStorage.setItem(STORAGE.PAYMENTS, JSON.stringify(p)); }
-
-        function initDB() {
-            if (!localStorage.getItem(STORAGE.CUSTOMERS)) {
-                let sample = [{ id: 1001, name: "Muhammad Ali", cnic: "42101-1234567-8", phone: "03001234567", email: "ali@ex.com", city: "Karachi", due_amount: 25000, total_paid: 5000, remaining_due: 20000, entry_date: "2025-03-01", address: "Defence", reason: "Shop Balance", photo_data: "", bill_photo_data: "", promise_date: "2025-04-30", reference_name: "Rizwan", reference_contact: "03111234567", co: "Ali Traders", colony: "Clifton" }];
-                saveCustomers(sample);
+        showToast("Syncing data to database...", false);
+        const localCustomers = loadCustomersFromLocal();
+        let synced = 0;
+        
+        for (const customer of localCustomers) {
+            if (customer.id > 10000) { // New customers
+                const result = await addCustomerToDB(customer);
+                if (result.success) synced++;
             }
-            if (!localStorage.getItem(STORAGE.PAYMENTS)) savePayments([{ id: 1, customerId: 1001, amount: 5000, payment_date: new Date().toISOString().split('T')[0], payment_method: "Cash", reference_no: "RC001" }]);
-            let custs = getCustomers(), pays = getPayments();
-            custs = custs.map(c => { let paid = pays.filter(p => p.customerId === c.id).reduce((s, p) => s + p.amount, 0); return { ...c, total_paid: paid, remaining_due: Math.max(0, c.due_amount - paid) }; });
-            saveCustomers(custs);
         }
-
-        function filterCustomers() {
-            let f = [...allCustomers];
-            if (currentSearch.trim()) { let t = currentSearch.toLowerCase(); f = f.filter(c => c.name.toLowerCase().includes(t) || (c.cnic && c.cnic.includes(t)) || (c.city && c.city.toLowerCase().includes(t)) || (c.phone && c.phone.includes(t))); }
-            if (currentFilter === 'due') f = f.filter(c => c.remaining_due > 0);
-            if (currentFilter === 'cleared') f = f.filter(c => c.remaining_due === 0);
-            return f;
+        
+        showToast(`Synced ${synced} customers to database`, false);
+        await loadDataFromDatabase();
+        return true;
+    }
+    
+    // Load all data from database
+    async function loadDataFromDatabase() {
+        if (!isDbConnected) return false;
+        
+        try {
+            // Fetch customers
+            const dbCustomers = await fetchCustomersFromDB();
+            if (dbCustomers) {
+                allCustomers = dbCustomers;
+                saveCustomersToLocal(allCustomers);
+                
+                // Fetch dashboard stats
+                const stats = await fetchDashboardStats();
+                if (stats) {
+                    document.getElementById("totalCustomerCount").innerText = stats.totalCustomers || 0;
+                    document.getElementById("totalOriginalDue").innerHTML = formatPKR(stats.totalOriginalDue || 0);
+                    document.getElementById("totalRemainingDueVal").innerHTML = formatPKR(stats.totalRemainingDue || 0);
+                }
+                
+                // Fetch overdue reminders
+                const overdue = await fetchOverdueReminders();
+                document.getElementById("reminderCountSpan").innerText = overdue.length;
+                document.getElementById("reminderListArea").innerHTML = overdue.length ? 
+                    overdue.map(r => `<div style="padding:12px 18px; border-bottom:1px solid #f1f5f9;">
+                        <i class="fas fa-bell" style="color:#ea580c"></i> 
+                        <strong>${escapeHtml(r.name)}</strong><br>
+                        <small>Due: ${formatPKR(r.remaining_due)}</small>
+                    </div>`).join('') : 
+                    '<div class="empty-message" style="padding:30px; text-align:center;">No reminders</div>';
+                
+                // Fetch today's payments
+                const todayPayments = await fetchTodayPayments();
+                const totalToday = todayPayments.reduce((sum, p) => sum + parseFloat(p.amount), 0);
+                document.getElementById("todayCollectionSpan").innerHTML = formatPKR(totalToday);
+                document.getElementById("collectionListArea").innerHTML = todayPayments.length ?
+                    todayPayments.map(p => `<div style="padding:12px 18px; border-bottom:1px solid #f1f5f9;">
+                        <i class="fas fa-coins"></i> ${escapeHtml(p.customer_name)} +${formatPKR(p.amount)}
+                    </div>`).join('') :
+                    '<div style="padding:30px; text-align:center;">No collections today</div>';
+                
+                renderFilteredCustomers();
+                return true;
+            }
+        } catch (error) {
+            console.error('Database load error:', error);
         }
-
-        function renderTable() {
-            let filtered = filterCustomers();
-            let isAdmin = currentUser?.role === 'admin';
-            let tbody = document.getElementById('customersList');
-            if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty-placeholder">📭 No customers found</td></tr>'; return; }
-            tbody.innerHTML = filtered.map(c => `<tr class="${c.remaining_due > 0 ? 'due-row' : ''}">
-                <td>${c.photo_data ? `<img src="${c.photo_data}" class="photo-circle" onclick="event.stopPropagation(); openZoom('${c.photo_data}')">` : '<i class="fas fa-user-circle" style="font-size:44px; color:#94a3b8;"></i>'}</td>
-                <td>#${c.id}</td><td><strong>${escapeHtml(c.name)}</strong></td><td>${escapeHtml(c.cnic || '—')}</td><td>${escapeHtml(c.city || '—')}</td>
-                <td>${escapeHtml(c.reference_name || '—')}</td><td class="${c.remaining_due > 0 ? 'due-amount-value' : ''}">${formatPKR(c.remaining_due)}</td>
-                <td class="action-buttons">
-                    <button class="action-btn receive-action" onclick="quickPayment(${c.id}, ${c.remaining_due}, '${escapeHtml(c.name)}')"><i class="fas fa-money-bill-wave"></i></button>
-                    ${isAdmin ? `<button class="action-btn edit-action" onclick="openEditModal(${c.id})"><i class="fas fa-edit"></i></button><button class="action-btn delete-action" onclick="deleteCustomer(${c.id}, '${escapeHtml(c.name)}')"><i class="fas fa-trash-alt"></i></button>` : ''}
+        return false;
+    }
+    
+    // Calculate remaining due
+    function recalcDue() {
+        let custs = loadCustomersFromLocal();
+        let pays = loadPaymentsFromLocal();
+        let updated = custs.map(c => {
+            let paid = pays.filter(p => p.customerId === c.id).reduce((s,p)=> s + p.amount, 0);
+            return { ...c, totalPaid: paid, remainingDue: Math.max(0, (c.dueAmount || 0) - paid) };
+        });
+        saveCustomersToLocal(updated);
+        return updated;
+    }
+    
+    // Get filtered customers
+    function getFiltered() {
+        let data = [...allCustomers];
+        if(currentSearchText.trim()) { 
+            let kw = currentSearchText.toLowerCase(); 
+            data = data.filter(c => c.name?.toLowerCase().includes(kw) || 
+                (c.cnic && c.cnic.includes(kw)) || 
+                (c.city?.toLowerCase().includes(kw)) || 
+                (c.phone && c.phone.includes(kw)) || 
+                (c.referenceName?.toLowerCase().includes(kw))); 
+        }
+        if(currentFilter === "due") data = data.filter(c => c.remainingDue > 0);
+        if(currentFilter === "cleared") data = data.filter(c => c.remainingDue === 0);
+        return data;
+    }
+    
+    // Render customers
+    function renderFilteredCustomers() {
+        let filtered = getFiltered();
+        let isAdmin = currentSession?.role === "admin";
+        let tbody = document.getElementById("customersTbody");
+        if(!filtered.length) { 
+            tbody.innerHTML = `<tr><td colspan="8" style="padding:40px; text-align:center;">No customers found</td></tr>`; 
+        }
+        else {
+            tbody.innerHTML = filtered.map(c => `<tr class="${c.remainingDue > 0 ? 'due-highlight' : ''}">
+                <td>${c.photoData ? `<img src="${c.photoData}" class="photo-round" onclick="zoomImage('${c.photoData}')">` : '<i class="fas fa-user-circle fa-2x" style="color:#94a3b8;"></i>'}</td>
+                <td>#${c.id}</td><td><strong>${escapeHtml(c.name)}</strong></td>
+                <td>${escapeHtml(c.cnic || '—')}</td><td>${escapeHtml(c.city || '—')}</td>
+                <td>${escapeHtml(c.referenceName || '—')}</td>
+                <td style="font-weight:700;${c.remainingDue>0?'color:#b91c1c':''}">${formatPKR(c.remainingDue)}</td>
+                <td class="action-group">
+                    <button class="action-badge receive-icon" style="color:#10b981;" onclick="quickReceive(${c.id}, ${c.remainingDue}, '${escapeHtml(c.name)}')">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </button>
+                    ${isAdmin ? `<button class="action-badge" style="color:#f59e0b;" onclick="editCustomer(${c.id})"><i class="fas fa-edit"></i></button>
+                    <button class="action-badge" style="color:#ef4444;" onclick="deleteCustomerById(${c.id}, '${escapeHtml(c.name)}')"><i class="fas fa-trash"></i></button>` : ''}
                 </td>
-            </tr>`).join('');
+            </tr>`).join("");
         }
-
-        function refreshStats() {
-            let customers = allCustomers;
-            document.getElementById('totalCustomers').innerText = customers.length;
-            document.getElementById('totalAmount').innerHTML = formatPKR(customers.reduce((s, c) => s + c.due_amount, 0));
-            document.getElementById('totalDue').innerHTML = formatPKR(customers.reduce((s, c) => s + c.remaining_due, 0));
-            let today = new Date().toISOString().split('T')[0];
-            let reminders = customers.filter(c => c.remaining_due > 0 && c.promise_date && c.promise_date <= today).slice(0, 5);
-            document.getElementById('reminderCount').innerText = reminders.length;
-            document.getElementById('reminderList').innerHTML = reminders.length ? reminders.map(r => `<div class="reminder-item"><div class="reminder-icon"><i class="fas fa-bell"></i></div><div><strong>${escapeHtml(r.name)}</strong><br><small>Due: ${formatPKR(r.remaining_due)}</small></div></div>`).join('') : '<div class="empty-placeholder">✅ No reminders</div>';
-            let pays = getPayments(), todayPays = pays.filter(p => p.payment_date === today);
-            document.getElementById('todayTotal').innerHTML = formatPKR(todayPays.reduce((s, p) => s + p.amount, 0));
-            document.getElementById('collectionList').innerHTML = todayPays.length ? todayPays.map(p => { let c = allCustomers.find(c => c.id === p.customerId); return `<div class="collection-item"><i class="fas fa-wallet"></i> <strong>${escapeHtml(c?.name || 'Unknown')}</strong> - ${formatPKR(p.amount)}</div>`; }).join('') : '<div class="empty-placeholder">💰 No collections today</div>';
+        
+        // Update stats from local if DB not connected
+        if (!isDbConnected) {
+            let totalOrig = allCustomers.reduce((s,c)=> s + (c.dueAmount || 0),0);
+            let totalRem = allCustomers.reduce((s,c)=> s + (c.remainingDue || 0),0);
+            document.getElementById("totalCustomerCount").innerText = allCustomers.length;
+            document.getElementById("totalOriginalDue").innerHTML = formatPKR(totalOrig);
+            document.getElementById("totalRemainingDueVal").innerHTML = formatPKR(totalRem);
+            
+            let today = new Date().toISOString().slice(0,10);
+            let overdue = allCustomers.filter(c => c.remainingDue > 0 && c.promiseDate && c.promiseDate <= today).slice(0,6);
+            document.getElementById("reminderCountSpan").innerText = overdue.length;
+            document.getElementById("reminderListArea").innerHTML = overdue.length ? 
+                overdue.map(r => `<div style="padding:12px 18px; border-bottom:1px solid #f1f5f9;">
+                    <i class="fas fa-bell" style="color:#ea580c"></i> 
+                    <strong>${escapeHtml(r.name)}</strong><br>
+                    <small>Due: ${formatPKR(r.remainingDue)}</small>
+                </div>`).join('') : 
+                '<div class="empty-message" style="padding:30px; text-align:center;">No reminders</div>';
+            
+            let payments = loadPaymentsFromLocal();
+            let todayPay = payments.filter(p => p.date === today);
+            let totalToday = todayPay.reduce((s,p)=> s + p.amount,0);
+            document.getElementById("todayCollectionSpan").innerHTML = formatPKR(totalToday);
+            document.getElementById("collectionListArea").innerHTML = todayPay.length ? 
+                todayPay.map(p => { let c = allCustomers.find(cx => cx.id === p.customerId); 
+                    return `<div style="padding:12px 18px; border-bottom:1px solid #f1f5f9;">
+                        <i class="fas fa-coins"></i> ${escapeHtml(c?.name || 'Unknown')} +${formatPKR(p.amount)}
+                    </div>`; 
+                }).join('') : 
+                '<div style="padding:30px; text-align:center;">No collections today</div>';
         }
-        function refreshAll() { allCustomers = getCustomers(); renderTable(); refreshStats(); }
-
-        // CRUD
-        window.quickPayment = (id, due, name) => {
-            if (due <= 0) return showToast("No due amount", 'error');
-            let amt = parseFloat(prompt(`Enter payment for ${name}\nMax: ${formatPKR(due)}`));
-            if (isNaN(amt) || amt <= 0 || amt > due) return;
-            let pays = getPayments();
-            pays.push({ id: Date.now(), customerId: id, amount: amt, payment_date: new Date().toISOString().split('T')[0], payment_method: "Cash", reference_no: "PAY" + Math.floor(Math.random() * 9999) });
-            savePayments(pays);
-            let custs = getCustomers();
-            custs = custs.map(c => { if (c.id === id) { let paid = pays.filter(p => p.customerId === id).reduce((s, p) => s + p.amount, 0); return { ...c, total_paid: paid, remaining_due: Math.max(0, c.due_amount - paid) }; } return c; });
-            saveCustomers(custs); refreshAll(); showToast(`✅ Received ${formatPKR(amt)} from ${name}`);
+    }
+    
+    // Quick receive payment
+    window.quickReceive = async (id, dueRem, name) => { 
+        if(dueRem<=0) return showToast("No pending dues", true); 
+        let amt = parseFloat(prompt(`Enter payment for ${name}\nMax: ${formatPKR(dueRem)}`)); 
+        if(isNaN(amt) || amt<=0 || amt>dueRem) return; 
+        
+        const paymentData = {
+            customerId: id,
+            amount: amt,
+            date: new Date().toISOString().slice(0,10),
+            method: "Cash"
         };
-        window.deleteCustomer = (id, name) => { if (currentUser?.role !== 'admin') return showToast("⛔ Only admin can delete", 'error'); if (confirm(`Delete "${name}" permanently?`)) { let custs = getCustomers().filter(c => c.id !== id); let pays = getPayments().filter(p => p.customerId !== id); saveCustomers(custs); savePayments(pays); refreshAll(); showToast(`🗑️ ${name} deleted`); } };
-        window.openZoom = (src) => { document.getElementById('zoomImg').src = src; document.getElementById('zoomModal').classList.add('active'); };
-        document.getElementById('zoomModal').addEventListener('click', () => document.getElementById('zoomModal').classList.remove('active'));
-
-        // Image Upload
-        function updateCustomerPreview() { document.getElementById('customerPhotoPreview').innerHTML = customerPhotoData ? `<img src="${customerPhotoData}" class="customer-circle-preview" onclick="openZoom('${customerPhotoData}')">` : '<i class="fas fa-user-circle" style="font-size: 80px; color: #cbd5e1;"></i>'; }
-        function updateBillPreview() { document.getElementById('billPhotoPreview').innerHTML = billPhotoData ? `<img src="${billPhotoData}" class="bill-preview" onclick="openZoom('${billPhotoData}')">` : '<i class="fas fa-file-image" style="font-size: 60px; color: #cbd5e1;"></i>'; }
-        document.getElementById('uploadCustomerPhotoBtn').onclick = () => document.getElementById('customerPhotoInput').click();
-        document.getElementById('uploadBillPhotoBtn').onclick = () => document.getElementById('billPhotoInput').click();
-        document.getElementById('customerPhotoInput').onchange = (e) => { let f = e.target.files[0]; if (f) { let r = new FileReader(); r.onload = (ev) => { customerPhotoData = ev.target.result; updateCustomerPreview(); }; r.readAsDataURL(f); } };
-        document.getElementById('billPhotoInput').onchange = (e) => { let f = e.target.files[0]; if (f) { let r = new FileReader(); r.onload = (ev) => { billPhotoData = ev.target.result; updateBillPreview(); }; r.readAsDataURL(f); } };
-        document.getElementById('removeCustomerPhotoBtn').onclick = () => { customerPhotoData = null; updateCustomerPreview(); };
-        document.getElementById('removeBillPhotoBtn').onclick = () => { billPhotoData = null; updateBillPreview(); };
-
-        function resetModal() { document.getElementById('customerForm').reset(); editModeId = null; customerPhotoData = null; billPhotoData = null; updateCustomerPreview(); updateBillPreview(); document.getElementById('dueAmount').value = 0; }
-        window.openEditModal = (id) => { if (currentUser?.role !== 'admin') return showToast("⛔ Only admin can edit", 'error'); let cust = allCustomers.find(c => c.id === id); if (cust) { editModeId = id; document.getElementById('fullName').value = cust.name; document.getElementById('cnic').value = cust.cnic || ''; document.getElementById('phone').value = cust.phone; document.getElementById('email').value = cust.email || ''; document.getElementById('city').value = cust.city; document.getElementById('dueAmount').value = cust.due_amount; document.getElementById('address').value = cust.address || ''; document.getElementById('refName').value = cust.reference_name || ''; document.getElementById('refContact').value = cust.reference_contact || ''; document.getElementById('promiseDate').value = cust.promise_date || ''; document.getElementById('co').value = cust.co || ''; document.getElementById('colony').value = cust.colony || ''; document.getElementById('reason').value = cust.reason || ''; customerPhotoData = cust.photo_data; billPhotoData = cust.bill_photo_data; updateCustomerPreview(); updateBillPreview(); document.getElementById('customerModal').classList.add('active'); } };
-        document.getElementById('openModalBtn').addEventListener('click', () => { resetModal(); editModeId = null; document.getElementById('customerModal').classList.add('active'); });
-        document.getElementById('closeModalBtn').addEventListener('click', () => document.getElementById('customerModal').classList.remove('active'));
-        document.getElementById('customerForm').addEventListener('submit', (e) => { e.preventDefault(); let name = document.getElementById('fullName').value.trim(), city = document.getElementById('city').value.trim(), phone = document.getElementById('phone').value.trim(); if (!name || !city || !phone) return showToast("Name, City & Phone required", 'error'); let due = parseFloat(document.getElementById('dueAmount').value) || 0; let custs = getCustomers(); if (editModeId) { let index = custs.findIndex(c => c.id === editModeId); if (index !== -1) { custs[index] = { ...custs[index], name, cnic: document.getElementById('cnic').value, phone, email: document.getElementById('email').value, city, due_amount: due, address: document.getElementById('address').value, reference_name: document.getElementById('refName').value, reference_contact: document.getElementById('refContact').value, promise_date: document.getElementById('promiseDate').value, co: document.getElementById('co').value, colony: document.getElementById('colony').value, reason: document.getElementById('reason').value, photo_data: customerPhotoData || custs[index].photo_data, bill_photo_data: billPhotoData || custs[index].bill_photo_data }; let paid = getPayments().filter(p => p.customerId === editModeId).reduce((s, p) => s + p.amount, 0); custs[index].total_paid = paid; custs[index].remaining_due = Math.max(0, custs[index].due_amount - paid); saveCustomers(custs); showToast("Customer updated"); } } else { let newId = Date.now() % 10000 + Math.floor(Math.random() * 9000); custs.push({ id: newId, name, cnic: document.getElementById('cnic').value, phone, email: document.getElementById('email').value, city, due_amount: due, total_paid: 0, remaining_due: due, entry_date: new Date().toISOString().split('T')[0], address: document.getElementById('address').value, reason: document.getElementById('reason').value, photo_data: customerPhotoData || "", bill_photo_data: billPhotoData || "", promise_date: document.getElementById('promiseDate').value, reference_name: document.getElementById('refName').value, reference_contact: document.getElementById('refContact').value, co: document.getElementById('co').value, colony: document.getElementById('colony').value }); saveCustomers(custs); showToast(`✅ ${name} added successfully`); } refreshAll(); document.getElementById('customerModal').classList.remove('active'); });
-
-        // Import/Export
-        document.getElementById('importBtn').addEventListener('click', () => { let input = document.createElement('input'); input.type = 'file'; input.accept = '.csv'; input.onchange = (e) => { let file = e.target.files[0]; let reader = new FileReader(); reader.onload = (ev) => { let rows = ev.target.result.split('\n').slice(1); let custs = getCustomers(); rows.forEach(row => { let cols = row.split(','); let name = cols[1]?.replace(/"/g, '').trim(); if (name) { custs.push({ id: Date.now() % 10000 + Math.floor(Math.random() * 9000), name, cnic: cols[2]?.replace(/"/g, ''), phone: cols[3]?.replace(/"/g, ''), email: "", city: cols[4]?.replace(/"/g, '') || "Karachi", due_amount: parseFloat(cols[6]) || 0, total_paid: 0, remaining_due: parseFloat(cols[6]) || 0, entry_date: new Date().toISOString().split('T')[0], address: "", reason: "", photo_data: "", bill_photo_data: "", promise_date: "", reference_name: "", reference_contact: "", co: "", colony: "" }); } }); saveCustomers(custs); refreshAll(); showToast("Import completed"); }; reader.readAsText(file); }; input.click(); });
-        function exportCSV(filtered) { let data = filtered ? filterCustomers() : allCustomers; if (!data.length) return showToast("No data", 'error'); let headers = ["ID", "Name", "CNIC", "Phone", "City", "Due Amount", "Paid", "Remaining", "Reference"]; let rows = data.map(c => [c.id, `"${c.name}"`, `"${c.cnic || ''}"`, `"${c.phone || ''}"`, `"${c.city || ''}"`, c.due_amount, c.total_paid, c.remaining_due, `"${c.reference_name || ''}"`]); let blob = new Blob(["\uFEFF" + headers.join(',') + "\n" + rows.map(r => r.join(',')).join('\n')], { type: "text/csv" }); let a = document.createElement('a'), url = URL.createObjectURL(blob); a.href = url; a.download = `customers_${filtered ? 'filtered' : 'all'}.csv`; a.click(); URL.revokeObjectURL(url); showToast(`Exported ${data.length} customers`); }
-        document.getElementById('exportAllBtn').onclick = () => exportCSV(false);
-        document.getElementById('exportFilteredBtn').onclick = () => exportCSV(true);
-        document.getElementById('searchInput').addEventListener('input', (e) => { currentSearch = e.target.value; refreshAll(); });
-        document.querySelectorAll('.filter-btn').forEach(btn => { btn.addEventListener('click', () => { currentFilter = btn.dataset.filter; document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); refreshAll(); }); });
-
-        // Voice Search
-        if ('webkitSpeechRecognition' in window) { let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)(); recognition.lang = 'en-PK'; document.getElementById('micBtn').addEventListener('click', () => { recognition.start(); showToast("🎤 Listening..."); }); recognition.onresult = (e) => { let transcript = e.results[0][0].transcript; document.getElementById('searchInput').value = transcript; currentSearch = transcript; refreshAll(); showToast(`Searched: ${transcript}`); }; }
-
-        // Login
-        function login(username, password) { let user = USERS[username.toLowerCase()]; if (user && user.password === password) { currentUser = { username, role: user.role, name: user.name }; document.getElementById('userRoleBadge').innerHTML = currentUser.role === 'admin' ? '👑 Admin (Full Access)' : '👤 User (Add + Receive)'; document.getElementById('openModalBtn').style.display = 'flex'; document.getElementById('loginScreen').style.display = 'none'; document.getElementById('app').style.display = 'block'; initDB(); refreshAll(); showToast(`Welcome ${currentUser.name}!`); return true; } return false; }
-        document.getElementById('loginForm').addEventListener('submit', (e) => { e.preventDefault(); if (!login(document.getElementById('username').value.trim(), document.getElementById('password').value)) { document.getElementById('errorMsg').textContent = 'Invalid credentials! Use admin/admin123 or user/user123'; document.getElementById('errorMsg').style.display = 'block'; } });
-        document.getElementById('quickAdminBtn').addEventListener('click', () => login('admin', 'admin123'));
-        document.getElementById('quickUserBtn').addEventListener('click', () => login('user', 'user123'));
-        document.getElementById('logoutBtn').addEventListener('click', () => { currentUser = null; document.getElementById('loginScreen').style.display = 'flex'; document.getElementById('app').style.display = 'none'; });
-    </script>
+        
+        if (isDbConnected) {
+            const result = await addPaymentToDB(paymentData);
+            if (result.success) {
+                await loadDataFromDatabase();
+                showToast(`✓ Received ${formatPKR(amt)}`);
+            } else {
+                showToast("Error saving payment", true);
+            }
+        } else {
+            let pays = loadPaymentsFromLocal(); 
+            pays.push({ id: Date.now(), customerId: id, amount: amt, date: new Date().toISOString().slice(0,10), method: "Cash" }); 
+            savePaymentsToLocal(pays); 
+            refreshFull(); 
+            showToast(`✓ Received ${formatPKR(amt)}`);
+        }
+    };
+    
+    // Delete customer
+    window.deleteCustomerById = async (id, name) => { 
+        if(currentSession?.role !== "admin") return showToast("Restricted", true); 
+        if(!confirm(`Delete ${name} permanently?`)) return; 
+        
+        if (isDbConnected) {
+            const result = await deleteCustomerFromDB(id);
+            if (result.success) {
+                await loadDataFromDatabase();
+                showToast(`Deleted ${name}`);
+            } else {
+                showToast("Error deleting customer", true);
+            }
+        } else {
+            let custs = loadCustomersFromLocal().filter(c => c.id !== id); 
+            let pays = loadPaymentsFromLocal().filter(p => p.customerId !== id); 
+            saveCustomersToLocal(custs); 
+            savePaymentsToLocal(pays); 
+            refreshFull(); 
+            showToast(`Deleted ${name}`);
+        }
+    };
+    
+    // Edit customer
+    window.editCustomer = (id) => { 
+        if(currentSession?.role !== "admin") return showToast("Only admin edit", true); 
+        let cust = allCustomers.find(c => c.id === id); 
+        if(cust) { 
+            editModeId = id; 
+            document.getElementById("fullNameField").value = cust.name; 
+            document.getElementById("cnicField").value = cust.cnic||""; 
+            document.getElementById("phoneField").value = cust.phone; 
+            document.getElementById("emailField").value = cust.email||""; 
+            document.getElementById("cityField").value = cust.city; 
+            document.getElementById("dueField").value = cust.dueAmount; 
+            document.getElementById("addressField").value = cust.address||""; 
+            document.getElementById("refNameField").value = cust.referenceName||""; 
+            document.getElementById("refContactField").value = cust.referenceContact||""; 
+            document.getElementById("promiseDateField").value = cust.promiseDate||""; 
+            document.getElementById("coField").value = cust.co||""; 
+            document.getElementById("colonyField").value = cust.colony||""; 
+            document.getElementById("reasonField").value = cust.reason||""; 
+            tempPhoto = cust.photoData||""; 
+            tempBill = cust.billPhotoData||""; 
+            updatePhotoPreview(); 
+            updateBillPreview(); 
+            document.getElementById("customerFormModal").classList.add("active"); 
+        } 
+    };
+    
+    function updatePhotoPreview() { 
+        let cont = document.getElementById("photoPreviewModal"); 
+        cont.innerHTML = tempPhoto ? `<img src="${tempPhoto}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; cursor:pointer;" onclick="zoomImage('${tempPhoto}')">` : '<i class="fas fa-user-circle fa-4x" style="color:#cbd5e1;"></i>'; 
+    }
+    
+    function updateBillPreview() { 
+        let cont = document.getElementById("billPreviewModal"); 
+        cont.innerHTML = tempBill ? `<img src="${tempBill}" style="width:80px; height:80px; border-radius:16px; object-fit:cover; cursor:pointer;" onclick="zoomImage('${tempBill}')">` : '<i class="fas fa-file-invoice fa-3x" style="color:#cbd5e1;"></i>'; 
+    }
+    
+    window.zoomImage = (src) => { 
+        document.getElementById("zoomPreviewImage").src = src; 
+        document.getElementById("zoomImageModal").classList.add("active"); 
+    };
+    
+    document.getElementById("zoomImageModal").addEventListener("click", () => document.getElementById("zoomImageModal").classList.remove("active"));
+    
+    function resetModalFresh() { 
+        editModeId = null; 
+        tempPhoto = ""; 
+        tempBill = ""; 
+        document.getElementById("customerDynamicForm").reset(); 
+        document.getElementById("dueField").value = 0; 
+        updatePhotoPreview(); 
+        updateBillPreview(); 
+    }
+    
+    document.getElementById("openAddCustomerModal").onclick = () => { 
+        resetModalFresh(); 
+        document.getElementById("customerFormModal").classList.add("active"); 
+    };
+    
+    document.getElementById("closeModalCrossBtn").onclick = () => document.getElementById("customerFormModal").classList.remove("active");
+    document.getElementById("cancelModalBtn").onclick = () => document.getElementById("customerFormModal").classList.remove("active");
+    document.getElementById("uploadPhotoModalBtn").onclick = () => document.getElementById("photoFileModal").click();
+    document.getElementById("uploadBillModalBtn").onclick = () => document.getElementById("billFileModal").click();
+    
+    document.getElementById("photoFileModal").onchange = (e) => { 
+        let f = e.target.files[0]; 
+        if(f){ 
+            let rd = new FileReader(); 
+            rd.onload = ev => { 
+                tempPhoto = ev.target.result; 
+                updatePhotoPreview(); 
+            }; 
+            rd.readAsDataURL(f); 
+        } 
+    };
+    
+    document.getElementById("billFileModal").onchange = (e) => { 
+        let f = e.target.files[0]; 
+        if(f){ 
+            let rd = new FileReader(); 
+            rd.onload = ev => { 
+                tempBill = ev.target.result; 
+                updateBillPreview(); 
+            }; 
+            rd.readAsDataURL(f); 
+        } 
+    };
+    
+    document.getElementById("removePhotoModalBtn").onclick = () => { tempPhoto = ""; updatePhotoPreview(); };
+    document.getElementById("removeBillModalBtn").onclick = () => { tempBill = ""; updateBillPreview(); };
+    
+    document.getElementById("customerDynamicForm").addEventListener("submit", async (e) => { 
+        e.preventDefault(); 
+        let name = document.getElementById("fullNameField").value.trim(); 
+        let city = document.getElementById("cityField").value.trim(); 
+        let phone = document.getElementById("phoneField").value.trim(); 
+        if(!name || !city || !phone) return showToast("Name, City & Phone required", true); 
+        let due = parseFloat(document.getElementById("dueField").value) || 0; 
+        
+        const customerData = {
+            name: name,
+            cnic: document.getElementById("cnicField").value,
+            phone: phone,
+            email: document.getElementById("emailField").value,
+            city: city,
+            dueAmount: due,
+            address: document.getElementById("addressField").value,
+            referenceName: document.getElementById("refNameField").value,
+            referenceContact: document.getElementById("refContactField").value,
+            promiseDate: document.getElementById("promiseDateField").value,
+            co: document.getElementById("coField").value,
+            colony: document.getElementById("colonyField").value,
+            reason: document.getElementById("reasonField").value,
+            photoData: tempPhoto || "",
+            billPhotoData: tempBill || ""
+        };
+        
+        if (isDbConnected) {
+            let result;
+            if(editModeId) {
+                result = await updateCustomerInDB(editModeId, customerData);
+                if(result.success) {
+                    await loadDataFromDatabase();
+                    showToast("Customer updated");
+                } else {
+                    showToast("Error updating customer", true);
+                }
+            } else {
+                result = await addCustomerToDB(customerData);
+                if(result.success) {
+                    await loadDataFromDatabase();
+                    showToast(`✅ ${name} added`);
+                } else {
+                    showToast("Error adding customer", true);
+                }
+            }
+        } else {
+            let custs = loadCustomersFromLocal();
+            if(editModeId) { 
+                let idx = custs.findIndex(c => c.id === editModeId); 
+                if(idx !== -1) { 
+                    let updated = { ...custs[idx], ...customerData, dueAmount: due, remainingDue: Math.max(0, due - (custs[idx].totalPaid ||0)) }; 
+                    custs[idx] = updated; 
+                    saveCustomersToLocal(custs); 
+                    showToast("Customer updated"); 
+                } 
+            } else { 
+                let newId = Date.now() % 100000; 
+                custs.push({ 
+                    id: newId, 
+                    ...customerData, 
+                    totalPaid: 0, 
+                    remainingDue: due, 
+                    entryDate: new Date().toISOString().slice(0,10)
+                }); 
+                saveCustomersToLocal(custs); 
+                showToast(`✅ ${name} added`); 
+            } 
+            refreshFull();
+        }
+        
+        document.getElementById("customerFormModal").classList.remove("active"); 
+    });
+    
+    function refreshFull() { 
+        allCustomers = recalcDue(); 
+        renderFilteredCustomers(); 
+    }
+    
+    document.getElementById("globalSearchInput").addEventListener("input", (e) => { 
+        currentSearchText = e.target.value; 
+        renderFilteredCustomers(); 
+    });
+    
+    document.querySelectorAll(".filter-chip").forEach(btn => { 
+        btn.addEventListener("click", () => { 
+            document.querySelectorAll(".filter-chip").forEach(b => b.classList.remove("active")); 
+            btn.classList.add("active"); 
+            currentFilter = btn.dataset.filter; 
+            renderFilteredCustomers(); 
+        }); 
+    });
+    
+    // Voice search
+    if('webkitSpeechRecognition' in window) { 
+        let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)(); 
+        recognition.lang = "en-PK"; 
+        document.getElementById("voiceMicBtn").addEventListener("click", () => { 
+            recognition.start(); 
+            showToast("🎤 Listening..."); 
+        }); 
+        recognition.onresult = (e) => { 
+            let spoken = e.results[0][0].transcript; 
+            document.getElementById("globalSearchInput").value = spoken; 
+            currentSearchText = spoken; 
+            renderFilteredCustomers(); 
+            showToast(`Searched: ${spoken}`); 
+        }; 
+    } else { 
+        document.getElementById("voiceMicBtn").style.display = "none"; 
+    }
+    
+    // Import/Export
+    document.getElementById("importCsvBtn").onclick = () => { 
+        let inp = document.createElement("input"); 
+        inp.type="file"; 
+        inp.accept=".csv"; 
+        inp.onchange=(e)=>{ 
+            let f=e.target.files[0]; 
+            let reader=new FileReader(); 
+            reader.onload=(ev)=>{ 
+                let rows=ev.target.result.split("\n").slice(1); 
+                let existing=loadCustomersFromLocal(); 
+                rows.forEach(row=>{ 
+                    let cols=row.split(","); 
+                    let nm=cols[1]?.replace(/"/g,"").trim(); 
+                    if(nm){ 
+                        existing.push({ 
+                            id:Date.now()%100000+Math.floor(Math.random()*9000), 
+                            name:nm, 
+                            cnic:cols[2]?.replace(/"/g,"")||"", 
+                            phone:cols[3]?.replace(/"/g,"")||"", 
+                            email:"", 
+                            city:cols[4]?.replace(/"/g,"")||"Karachi", 
+                            dueAmount:parseFloat(cols[6])||0, 
+                            totalPaid:0, 
+                            remainingDue:parseFloat(cols[6])||0, 
+                            entryDate:new Date().toISOString().slice(0,10), 
+                            address:"", 
+                            referenceName:cols[8]?.replace(/"/g,"")||"", 
+                            referenceContact:"", 
+                            promiseDate:"", 
+                            co:"", 
+                            colony:"", 
+                            reason:"", 
+                            photoData:"", 
+                            billPhotoData:"" 
+                        }); 
+                    } 
+                }); 
+                saveCustomersToLocal(existing); 
+                refreshFull(); 
+                showToast("Import completed"); 
+                
+                if(isDbConnected) {
+                    syncLocalToDatabase();
+                }
+            }; 
+            reader.readAsText(f); 
+        }; 
+        inp.click(); 
+    };
+    
+    function exportCSV(filteredFlag) { 
+        let data = filteredFlag ? getFiltered() : allCustomers; 
+        if(!data.length) return showToast("No data", true); 
+        let headers = ["ID","Name","CNIC","Phone","City","DueAmount","Paid","Remaining","Reference"]; 
+        let rows = data.map(c => [c.id, `"${c.name}"`, `"${c.cnic||''}"`, `"${c.phone||''}"`, `"${c.city||''}"`, c.dueAmount, c.totalPaid, c.remainingDue, `"${c.referenceName||''}"`]); 
+        let blob = new Blob([headers.join(",")+"\n"+rows.map(r=>r.join(",")).join("\n")], {type:"text/csv"}); 
+        let a=document.createElement("a"); 
+        a.href=URL.createObjectURL(blob); 
+        a.download=`customers_${filteredFlag?"filtered":"all"}.csv`; 
+        a.click(); 
+        showToast(`Exported ${data.length} records`); 
+    }
+    
+    document.getElementById("exportFullBtn").onclick = () => exportCSV(false);
+    document.getElementById("exportFilteredBtn").onclick = () => exportCSV(true);
+    document.getElementById("syncDatabaseBtn").onclick = () => syncLocalToDatabase();
+    
+    // Check database connection status
+    async function checkDatabaseStatus() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/dashboard/stats`);
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    isDbConnected = true;
+                    const statusSpan = document.getElementById("dbStatusIndicator");
+                    statusSpan.textContent = "DB ONLINE";
+                    statusSpan.className = "db-status db-online";
+                    showToast("Connected to MySQL Database", false);
+                    await loadDataFromDatabase();
+                    return true;
+                }
+            }
+        } catch (error) {
+            console.log('Database not available, using localStorage');
+        }
+        isDbConnected = false;
+        const statusSpan = document.getElementById("dbStatusIndicator");
+        statusSpan.textContent = "LOCAL MODE";
+        statusSpan.className = "db-status db-offline";
+        return false;
+    }
+    
+    // Login logic
+    function doLogin(uname, pwd) { 
+        let user = USER_CRED[uname.toLowerCase()]; 
+        if(user && user.password === pwd) { 
+            currentSession = { username: uname, role: user.role, label: user.label }; 
+            document.getElementById("userRoleSpan").innerHTML = currentSession.role === "admin" ? "👑 Admin" : "👤 Officer"; 
+            
+            if(!localStorage.getItem(CUST_STORAGE)) { 
+                let demo = [{ 
+                    id:1005, 
+                    name:"Kamran Associates", 
+                    cnic:"", 
+                    phone:"03009998888", 
+                    email:"", 
+                    city:"Rawalpindi", 
+                    dueAmount:47000, 
+                    totalPaid:0, 
+                    remainingDue:47000, 
+                    entryDate:"2025-04-01", 
+                    address:"Commercial Market", 
+                    referenceName:"Imran", 
+                    referenceContact:"03331234567", 
+                    promiseDate:"2025-05-15", 
+                    co:"Kamran Corp", 
+                    colony:"Gulrez", 
+                    reason:"Balance", 
+                    photoData:"", 
+                    billPhotoData:"" 
+                }]; 
+                saveCustomersToLocal(demo); 
+                savePaymentsToLocal([]); 
+            }
+            
+            allCustomers = loadCustomersFromLocal();
+            renderFilteredCustomers();
+            document.getElementById("loginScreen").style.display = "none"; 
+            document.getElementById("mainApp").style.display = "block"; 
+            showToast(`Welcome ${user.label}`);
+            
+            // Check database connection after login
+            setTimeout(() => checkDatabaseStatus(), 500);
+            return true; 
+        } 
+        return false; 
+    }
+    
+    document.getElementById("smartLoginForm").addEventListener("submit", (e) => { 
+        e.preventDefault(); 
+        let un = document.getElementById("loginUsername").value.trim(), 
+            pw = document.getElementById("loginPassword").value; 
+        if(!doLogin(un, pw)) { 
+            document.getElementById("loginError").innerText = "Invalid credentials (admin/admin123 or user/user123)"; 
+            document.getElementById("loginError").style.display = "block"; 
+        } 
+    });
+    
+    document.querySelectorAll(".role-tab").forEach(tab => { 
+        tab.addEventListener("click", () => { 
+            document.querySelectorAll(".role-tab").forEach(t=>t.classList.remove("active")); 
+            tab.classList.add("active"); 
+            let u = tab.dataset.user, p = tab.dataset.pass; 
+            document.getElementById("loginUsername").value = u; 
+            document.getElementById("loginPassword").value = p; 
+        }); 
+    });
+    
+    document.getElementById("logoutGlobalBtn").addEventListener("click", () => { 
+        currentSession = null; 
+        document.getElementById("mainApp").style.display = "none"; 
+        document.getElementById("loginScreen").style.display = "flex"; 
+        document.getElementById("loginUsername").value = ""; 
+        document.getElementById("loginPassword").value = ""; 
+        isDbConnected = false;
+    });
+    
+    // Initialize with sample data if empty
+    if(!localStorage.getItem(CUST_STORAGE)) { 
+        let init = [{ 
+            id:1001, 
+            name:"Zara Traders", 
+            cnic:"", 
+            phone:"03001234567", 
+            email:"", 
+            city:"Karachi", 
+            dueAmount:25000, 
+            totalPaid:0, 
+            remainingDue:25000, 
+            entryDate:"2025-03-10", 
+            address:"Clifton", 
+            referenceName:"Ali", 
+            referenceContact:"", 
+            promiseDate:"2025-04-25", 
+            co:"", 
+            colony:"", 
+            reason:"", 
+            photoData:"", 
+            billPhotoData:"" 
+        }]; 
+        saveCustomersToLocal(init); 
+        savePaymentsToLocal([]); 
+    }
+    
+    allCustomers = loadCustomersFromLocal();
+</script>
 </body>
 </html>
