@@ -18,14 +18,15 @@ app.use(express.static(path.join(__dirname)));
 let pool;
 
 // Get database configuration from environment variables (Railway friendly)
+// Database connection pool - Railway Optimized
 const dbConfig = {
     host: process.env.MYSQLHOST || process.env.DB_HOST || 'localhost',
     user: process.env.MYSQLUSER || process.env.DB_USER || 'root',
     password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || '',
-    database: process.env.MYSQLDATABASE || process.env.DB_NAME || 'fincollect_db',
+    database: process.env.MYSQLDATABASE || process.env.DB_NAME || 'railway',
     port: parseInt(process.env.MYSQLPORT || process.env.DB_PORT || '3306'),
     waitForConnections: true,
-    connectionLimit: 5,
+    connectionLimit: 1,
     connectTimeout: 60000,
     idleTimeoutMillis: 30000,
     queueLimit: 0,

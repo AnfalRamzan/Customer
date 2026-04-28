@@ -637,7 +637,6 @@
     let editModeId = null, tempPhoto = "", tempBill = "";
     let isDbConnected = false;
     
-    // Helper Functions
     function showToast(msg, isErr = false) { 
         let t = document.getElementById("globalToastMsg"); 
         t.textContent = msg; 
@@ -655,7 +654,6 @@
         return String(str).replace(/[&<>]/g, m => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;" }[m])); 
     }
     
-    // Database API Calls
     async function apiCall(endpoint, options = {}) {
         try {
             const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -673,7 +671,6 @@
         }
     }
     
-    // Fetch customers from database
     async function fetchCustomersFromDB() {
         const result = await apiCall('/api/customers');
         if (result.success && result.data) {
@@ -702,7 +699,6 @@
         return null;
     }
     
-    // Add customer to database
     async function addCustomerToDB(customerData) {
         const result = await apiCall('/api/customers', {
             method: 'POST',
@@ -711,7 +707,6 @@
         return result;
     }
     
-    // Update customer in database
     async function updateCustomerInDB(id, customerData) {
         const result = await apiCall(`/api/customers/${id}`, {
             method: 'PUT',
@@ -720,7 +715,6 @@
         return result;
     }
     
-    // Delete customer from database
     async function deleteCustomerFromDB(id) {
         const result = await apiCall(`/api/customers/${id}`, {
             method: 'DELETE'
@@ -728,7 +722,6 @@
         return result;
     }
     
-    // Add payment to database
     async function addPaymentToDB(paymentData) {
         const result = await apiCall('/api/payments', {
             method: 'POST',
@@ -737,7 +730,6 @@
         return result;
     }
     
-    // Fetch dashboard stats
     async function fetchDashboardStats() {
         const result = await apiCall('/api/dashboard/stats');
         if (result.success) {
@@ -746,7 +738,6 @@
         return null;
     }
     
-    // Fetch overdue reminders
     async function fetchOverdueReminders() {
         const result = await apiCall('/api/reminders/overdue');
         if (result.success) {
@@ -755,7 +746,6 @@
         return [];
     }
     
-    // Fetch today's payments
     async function fetchTodayPayments() {
         const today = new Date().toISOString().slice(0,10);
         const result = await apiCall(`/api/payments?date=${today}`);
@@ -765,7 +755,6 @@
         return [];
     }
     
-    // Local Storage Functions (Backup)
     function loadCustomersFromLocal() { 
         return JSON.parse(localStorage.getItem(CUST_STORAGE) || "[]"); 
     }
@@ -782,7 +771,6 @@
         localStorage.setItem(PAY_STORAGE, JSON.stringify(arr)); 
     }
     
-    // Sync local data with database
     async function syncLocalToDatabase() {
         if (!isDbConnected) {
             showToast("Database not connected", true);
@@ -805,7 +793,6 @@
         return true;
     }
     
-    // Load all data from database
     async function loadDataFromDatabase() {
         if (!isDbConnected) return false;
         
@@ -850,7 +837,6 @@
         return false;
     }
     
-    // Calculate remaining due
     function recalcDue() {
         let custs = loadCustomersFromLocal();
         let pays = loadPaymentsFromLocal();
@@ -862,7 +848,6 @@
         return updated;
     }
     
-    // Get filtered customers
     function getFiltered() {
         let data = [...allCustomers];
         if(currentSearchText.trim()) { 
@@ -878,7 +863,6 @@
         return data;
     }
     
-    // Render customers
     function renderFilteredCustomers() {
         let filtered = getFiltered();
         let isAdmin = currentSession?.role === "admin";
@@ -935,7 +919,6 @@
         }
     }
     
-    // Quick receive payment
     window.quickReceive = async (id, dueRem, name) => { 
         if(dueRem<=0) return showToast("No pending dues", true); 
         let amt = parseFloat(prompt(`Enter payment for ${name}\nMax: ${formatPKR(dueRem)}`)); 
@@ -965,7 +948,6 @@
         }
     };
     
-    // Delete customer
     window.deleteCustomerById = async (id, name) => { 
         if(currentSession?.role !== "admin") return showToast("Restricted", true); 
         if(!confirm(`Delete ${name} permanently?`)) return; 
@@ -988,7 +970,6 @@
         }
     };
     
-    // Edit customer
     window.editCustomer = (id) => { 
         if(currentSession?.role !== "admin") return showToast("Only admin edit", true); 
         let cust = allCustomers.find(c => c.id === id); 
@@ -1171,7 +1152,6 @@
         }); 
     });
     
-    // Voice search
     if('webkitSpeechRecognition' in window) { 
         let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)(); 
         recognition.lang = "en-PK"; 
@@ -1190,7 +1170,6 @@
         document.getElementById("voiceMicBtn").style.display = "none"; 
     }
     
-    // Import/Export
     document.getElementById("importCsvBtn").onclick = () => { 
         let inp = document.createElement("input"); 
         inp.type="file"; 
@@ -1258,7 +1237,6 @@
     document.getElementById("exportFilteredBtn").onclick = () => exportCSV(true);
     document.getElementById("syncDatabaseBtn").onclick = () => syncLocalToDatabase();
     
-    // Check database connection status
     async function checkDatabaseStatus() {
         try {
             const response = await fetch(`${API_BASE_URL}/api/dashboard/stats`);
@@ -1284,7 +1262,6 @@
         return false;
     }
     
-    // Login logic
     function doLogin(uname, pwd) { 
         let user = USER_CRED[uname.toLowerCase()]; 
         if(user && user.password === pwd) { 
@@ -1358,7 +1335,6 @@
         isDbConnected = false;
     });
     
-    // Initialize with sample data if empty
     if(!localStorage.getItem(CUST_STORAGE)) { 
         let init = [{ 
             id:1001, 
@@ -1387,5 +1363,3 @@
     
     allCustomers = loadCustomersFromLocal();
 </script>
-</body>
-</html>
