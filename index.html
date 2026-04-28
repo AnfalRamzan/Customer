@@ -578,7 +578,7 @@
                     <tr><th>Photo</th><th>ID</th><th>Name</th><th>CNIC</th><th>City</th><th>Reference</th><th>Due (PKR)</th><th>Actions</th></tr>
                 </thead>
                 <tbody id="customersTbody"></tbody>
-            </table>
+            <table>
         </div>
         <div class="right-panels">
             <div class="info-card"><div class="card-header"><span><i class="fas fa-bell"></i> Overdue Alerts</span><span id="reminderCountSpan">0</span></div><div id="reminderListArea" class="reminder-list" style="max-height:280px; overflow:auto;"></div></div>
@@ -621,10 +621,10 @@
 <div id="globalToastMsg" class="toast-message"></div>
 
 <script>
-    // Configuration
-    const API_BASE_URL = 'http://localhost:3000/api';
+    // Configuration - Fixed for Railway
+    const API_BASE_URL = '';
     
-    // Hardcoded users (保持不变)
+    // Hardcoded users
     const USER_CRED = { 
         admin: { password: "admin123", role: "admin", label: "Admin" }, 
         user: { password: "user123", role: "user", label: "Collection Officer" } 
@@ -675,9 +675,8 @@
     
     // Fetch customers from database
     async function fetchCustomersFromDB() {
-        const result = await apiCall('/customers');
+        const result = await apiCall('/api/customers');
         if (result.success && result.data) {
-            // Convert database format to frontend format
             return result.data.map(c => ({
                 id: c.id,
                 name: c.name,
@@ -705,7 +704,7 @@
     
     // Add customer to database
     async function addCustomerToDB(customerData) {
-        const result = await apiCall('/customers', {
+        const result = await apiCall('/api/customers', {
             method: 'POST',
             body: JSON.stringify(customerData)
         });
@@ -714,7 +713,7 @@
     
     // Update customer in database
     async function updateCustomerInDB(id, customerData) {
-        const result = await apiCall(`/customers/${id}`, {
+        const result = await apiCall(`/api/customers/${id}`, {
             method: 'PUT',
             body: JSON.stringify(customerData)
         });
@@ -723,7 +722,7 @@
     
     // Delete customer from database
     async function deleteCustomerFromDB(id) {
-        const result = await apiCall(`/customers/${id}`, {
+        const result = await apiCall(`/api/customers/${id}`, {
             method: 'DELETE'
         });
         return result;
@@ -731,7 +730,7 @@
     
     // Add payment to database
     async function addPaymentToDB(paymentData) {
-        const result = await apiCall('/payments', {
+        const result = await apiCall('/api/payments', {
             method: 'POST',
             body: JSON.stringify(paymentData)
         });
@@ -740,7 +739,7 @@
     
     // Fetch dashboard stats
     async function fetchDashboardStats() {
-        const result = await apiCall('/dashboard/stats');
+        const result = await apiCall('/api/dashboard/stats');
         if (result.success) {
             return result.data;
         }
@@ -749,7 +748,7 @@
     
     // Fetch overdue reminders
     async function fetchOverdueReminders() {
-        const result = await apiCall('/reminders/overdue');
+        const result = await apiCall('/api/reminders/overdue');
         if (result.success) {
             return result.data;
         }
@@ -759,7 +758,7 @@
     // Fetch today's payments
     async function fetchTodayPayments() {
         const today = new Date().toISOString().slice(0,10);
-        const result = await apiCall(`/payments?date=${today}`);
+        const result = await apiCall(`/api/payments?date=${today}`);
         if (result.success) {
             return result.data;
         }
@@ -795,7 +794,7 @@
         let synced = 0;
         
         for (const customer of localCustomers) {
-            if (customer.id > 10000) { // New customers
+            if (customer.id > 10000) {
                 const result = await addCustomerToDB(customer);
                 if (result.success) synced++;
             }
@@ -811,13 +810,11 @@
         if (!isDbConnected) return false;
         
         try {
-            // Fetch customers
             const dbCustomers = await fetchCustomersFromDB();
             if (dbCustomers) {
                 allCustomers = dbCustomers;
                 saveCustomersToLocal(allCustomers);
                 
-                // Fetch dashboard stats
                 const stats = await fetchDashboardStats();
                 if (stats) {
                     document.getElementById("totalCustomerCount").innerText = stats.totalCustomers || 0;
@@ -825,7 +822,6 @@
                     document.getElementById("totalRemainingDueVal").innerHTML = formatPKR(stats.totalRemainingDue || 0);
                 }
                 
-                // Fetch overdue reminders
                 const overdue = await fetchOverdueReminders();
                 document.getElementById("reminderCountSpan").innerText = overdue.length;
                 document.getElementById("reminderListArea").innerHTML = overdue.length ? 
@@ -836,7 +832,6 @@
                     </div>`).join('') : 
                     '<div class="empty-message" style="padding:30px; text-align:center;">No reminders</div>';
                 
-                // Fetch today's payments
                 const todayPayments = await fetchTodayPayments();
                 const totalToday = todayPayments.reduce((sum, p) => sum + parseFloat(p.amount), 0);
                 document.getElementById("todayCollectionSpan").innerHTML = formatPKR(totalToday);
@@ -908,7 +903,6 @@
             </tr>`).join("");
         }
         
-        // Update stats from local if DB not connected
         if (!isDbConnected) {
             let totalOrig = allCustomers.reduce((s,c)=> s + (c.dueAmount || 0),0);
             let totalRem = allCustomers.reduce((s,c)=> s + (c.remainingDue || 0),0);
@@ -1267,7 +1261,7 @@
     // Check database connection status
     async function checkDatabaseStatus() {
         try {
-            const response = await fetch(`${API_BASE_URL}/dashboard/stats`);
+            const response = await fetch(`${API_BASE_URL}/api/dashboard/stats`);
             if (response.ok) {
                 const data = await response.json();
                 if (data.success) {
@@ -1329,7 +1323,6 @@
             document.getElementById("mainApp").style.display = "block"; 
             showToast(`Welcome ${user.label}`);
             
-            // Check database connection after login
             setTimeout(() => checkDatabaseStatus(), 500);
             return true; 
         } 
