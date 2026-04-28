@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2/promise');
 const cors = require('cors');
@@ -13,37 +14,54 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.join(__dirname)));
 
-// Database connection pool - Serverless Optimized
+// Database connection pool - Optimized for Railway
 let pool;
 
+// Get database configuration from environment variables (Railway friendly)
+const dbConfig = {
+    host: process.env.MYSQLHOST || process.env.DB_HOST || 'localhost',
+    user: process.env.MYSQLUSER || process.env.DB_USER || 'root',
+    password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || '',
+    database: process.env.MYSQLDATABASE || process.env.DB_NAME || 'fincollect_db',
+    port: parseInt(process.env.MYSQLPORT || process.env.DB_PORT || '3306'),
+    waitForConnections: true,
+    connectionLimit: 5,
+    connectTimeout: 60000,
+    idleTimeoutMillis: 30000,
+    queueLimit: 0,
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 0
+};
+
+console.log('📊 Database Config:', {
+    host: dbConfig.host,
+    user: dbConfig.user,
+    database: dbConfig.database,
+    port: dbConfig.port
+});
+
+// Initialize database connection
 async function initDatabase() {
     try {
-        pool = mysql.createPool({
-            host: process.env.DB_HOST || 'localhost',
-            user: process.env.DB_USER || 'root',
-            password: process.env.DB_PASSWORD || '',
-            database: process.env.DB_NAME || 'fincollect_db',
-            waitForConnections: true,
-            connectionLimit: 1, // For serverless
-            enableKeepAlive: false,
-            idleTimeoutMillis: 30000,
-            queueLimit: 0
-        });
-        
+        pool = mysql.createPool(dbConfig);
         // Test connection
         const connection = await pool.getConnection();
         console.log('✅ MySQL Database connected successfully!');
-        console.log('📊 Database:', process.env.DB_NAME || 'fincollect_db');
+        console.log('📊 Database:', dbConfig.database);
         connection.release();
         return true;
     } catch (error) {
         console.error('❌ Database connection failed:', error.message);
-        console.log('⚠️  Starting in demo mode with localStorage fallback...');
+        console.log('\n📌 Please ensure:');
+        console.log('   1. MySQL is running');
+        console.log('   2. Database "fincollect_db" exists');
+        console.log('   3. Credentials are correct');
+        console.log('\n⚠️  Starting in demo mode with localStorage fallback...');
         return false;
     }
 }
 
-// API Routes
+// ============ API ROUTES ============
 
 // Get all customers
 app.get('/api/customers', async (req, res) => {
@@ -54,6 +72,7 @@ app.get('/api/customers', async (req, res) => {
         const [rows] = await pool.query('SELECT * FROM customers ORDER BY created_at DESC');
         res.json({ success: true, data: rows });
     } catch (error) {
+        console.error('API Error:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
@@ -127,6 +146,7 @@ app.post('/api/customers', async (req, res) => {
         
         res.json({ success: true, message: 'Customer added successfully', id: result.insertId });
     } catch (error) {
+        console.error('API Error:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
@@ -173,6 +193,7 @@ app.put('/api/customers/:id', async (req, res) => {
         
         res.json({ success: true, message: 'Customer updated successfully' });
     } catch (error) {
+        console.error('API Error:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
@@ -186,6 +207,7 @@ app.delete('/api/customers/:id', async (req, res) => {
         await pool.query('DELETE FROM customers WHERE id = ?', [req.params.id]);
         res.json({ success: true, message: 'Customer deleted successfully' });
     } catch (error) {
+        console.error('API Error:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
@@ -201,7 +223,7 @@ app.post('/api/payments', async (req, res) => {
         await pool.query(
             `INSERT INTO payments (customer_id, amount, payment_date, payment_method) 
              VALUES (?, ?, ?, ?)`,
-            [customerId, amount, date, method]
+            [customerId, amount, date, method || 'Cash']
         );
         
         await pool.query(
@@ -213,6 +235,7 @@ app.post('/api/payments', async (req, res) => {
         
         res.json({ success: true, message: 'Payment recorded successfully' });
     } catch (error) {
+        console.error('API Error:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
@@ -247,6 +270,7 @@ app.get('/api/payments', async (req, res) => {
         const [rows] = await pool.query(query, params);
         res.json({ success: true, data: rows });
     } catch (error) {
+        console.error('API Error:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
@@ -257,7 +281,7 @@ app.get('/api/dashboard/stats', async (req, res) => {
         if (!pool) {
             return res.json({ success: false, error: 'Database not connected', fallback: true });
         }
-        const [stats] = await pool.query('SELECT * FROM dashboard_stats');
+        const [stats] = await pool.query('SELECT COUNT(*) as total_customers, SUM(due_amount) as total_original_due, SUM(remaining_due) as total_remaining_due FROM customers');
         const [todayPayments] = await pool.query(
             'SELECT SUM(amount) as total FROM payments WHERE payment_date = CURDATE()'
         );
@@ -272,6 +296,7 @@ app.get('/api/dashboard/stats', async (req, res) => {
             }
         });
     } catch (error) {
+        console.error('API Error:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
@@ -290,8 +315,18 @@ app.get('/api/reminders/overdue', async (req, res) => {
         );
         res.json({ success: true, data: rows });
     } catch (error) {
+        console.error('API Error:', error);
         res.status(500).json({ success: false, error: error.message });
     }
+});
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+    res.json({ 
+        status: 'ok', 
+        timestamp: new Date().toISOString(),
+        database: pool ? 'connected' : 'disconnected'
+    });
 });
 
 // Serve main HTML file
@@ -299,21 +334,18 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Health check endpoint for Vercel
-app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
-
-// Start server (for local development)
+// Start server
 async function startServer() {
-    await initDatabase();
+    const dbConnected = await initDatabase();
+    
     app.listen(PORT, () => {
         console.log(`\n🚀 Server running at: http://localhost:${PORT}`);
+        console.log(`📊 Database Status: ${dbConnected ? 'CONNECTED ✅' : 'DISCONNECTED (Demo Mode) ⚠️'}`);
         console.log(`📊 FinCollect Pro is ready!\n`);
     });
 }
 
-// For Vercel serverless
+// For Vercel/Railway serverless
 if (require.main === module) {
     startServer();
 }
